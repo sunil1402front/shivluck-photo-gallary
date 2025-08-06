@@ -86,18 +86,14 @@ export default function Home() {
     setIsLoading(true);
     
     try {
-      // Convert image to base64 for storage
-      const base64 = await convertFileToBase64(selectedImage);
+      // Create FormData for file upload
+      const formData = new FormData();
+      formData.append('file', selectedImage);
+      formData.append('phoneNumber', mobileNumber);
       
       const response = await fetch('/api/photos', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          url: base64,
-          phoneNumber: mobileNumber
-        }),
+        body: formData,
       });
 
       if (response.ok) {
@@ -151,18 +147,6 @@ export default function Home() {
     } finally {
       setIsDeleting(false);
     }
-  };
-
-  const convertFileToBase64 = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => {
-        const result = reader.result as string;
-        resolve(result);
-      };
-      reader.onerror = error => reject(error);
-    });
   };
 
   const handleCloseModal = () => {

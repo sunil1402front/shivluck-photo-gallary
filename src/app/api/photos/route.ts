@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { put } from '@vercel/blob';
 import { prisma } from '@/lib/prisma';
 
 // GET /api/photos - Get all non-deleted photos
@@ -26,20 +27,29 @@ export async function GET() {
 // POST /api/photos - Upload new photo
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-    const { url, phoneNumber } = body;
+    const formData = await request.formData();
+    const file = formData.get('file') as File;
+    const phoneNumber = formData.get('phoneNumber') as string;
 
-    if (!url || !phoneNumber) {
+    if (!file || !phoneNumber) {
       return NextResponse.json(
         { error: 'Missing required fields' },
         { status: 400 }
       );
     }
 
-    // Validate that url is a proper base64 image
-    if (!url.startsWith('data:image/')) {
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
       return NextResponse.json(
-        { error: 'Invalid image format. Please upload a valid image file.' },
+        { error: 'Invalid file type. Please upload an image.' },
+        { status: 400 }
+      );
+    }
+
+    // Validate file size (10MB limit)
+    if (file.size > 10 * 1024 * 1024) {
+      return NextResponse.json(
+        { error: 'File size too large. Please upload an image smaller than 10MB.' },
         { status: 400 }
       );
     }
@@ -52,9 +62,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Upload to Vercel Blob
+    const blob = await put(file.name, file, {
+      access: 'public',
+    });
+
+    // Save to database
     const photo = await prisma.photo.create({
       data: {
-        url,
+        url: blob.url,
         phoneNumber
       }
     });
