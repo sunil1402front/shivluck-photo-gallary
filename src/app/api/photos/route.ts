@@ -54,6 +54,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
+
+
+    
     // Validate mobile number
     if (phoneNumber !== '7016418231') {
       return NextResponse.json(
