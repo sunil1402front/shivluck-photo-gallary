@@ -86,7 +86,7 @@ export default function Home() {
     setIsLoading(true);
     
     try {
-      // Create FormData for file upload
+      // Create FormData for file upload to Vercel Blob
       const formData = new FormData();
       formData.append('file', selectedImage);
       formData.append('phoneNumber', mobileNumber);
@@ -242,7 +242,7 @@ export default function Home() {
                       })}
                     </p>
                     <p className="text-xs text-gray-400 mt-2">
-                      Manage By : <span className="font-bold  bg-gradient-to-r from-indigo-400 via-purple-600 to-pink-500 mb-4 text-white px-2 py-1 rounded-md">SHIVLUCK Interior</span>
+                      Manage By : <span className="font-bold bg-gradient-to-r from-indigo-400 via-purple-600 to-pink-500 text-white px-2 py-1 rounded-md">SHIVLUCK Interior</span>
                     </p>
                   </div>
                 </div>

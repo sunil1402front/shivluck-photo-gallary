@@ -58,16 +58,21 @@ export async function POST(request: NextRequest) {
     if (phoneNumber !== '7016418231') {
       return NextResponse.json(
         { error: 'Unauthorized mobile number. Only 7016418231 can upload photos.' },
-        { status: 401 }
+        { status: 400 }
       );
     }
 
+    // Generate unique filename with timestamp
+    const timestamp = Date.now();
+    const fileExtension = file.name.split('.').pop();
+    const fileName = `shivluck-${timestamp}.${fileExtension}`;
+
     // Upload to Vercel Blob
-    const blob = await put(file.name, file, {
+    const blob = await put(fileName, file, {
       access: 'public',
     });
 
-    // Save to database
+    // Save to database with the Vercel Blob URL
     const photo = await prisma.photo.create({
       data: {
         url: blob.url,
