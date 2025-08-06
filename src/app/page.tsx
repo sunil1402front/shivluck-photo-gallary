@@ -257,8 +257,8 @@ export default function Home() {
                         day: 'numeric'
                       })}
                     </p>
-                    <p className="text-xs text-gray-400 mt-1">
-                      Phone: {photo.phoneNumber}
+                    <p className="text-xs text-gray-400 mt-2">
+                      Manage By : <span className="font-bold  bg-gradient-to-r from-indigo-400 via-purple-600 to-pink-500 mb-4 text-white px-2 py-1 rounded-md">SHIVLUCK Interior</span>
                     </p>
                   </div>
                 </div>
