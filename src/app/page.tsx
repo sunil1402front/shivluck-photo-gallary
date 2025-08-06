@@ -1,25 +1,26 @@
 'use client';
 
-import Image from 'next/image';
 import { useState, useEffect } from 'react';
 
 interface UploadedPhoto {
   id: string;
   url: string;
-  name: string;
-  size: number;
-  type: string;
+  phoneNumber: string;
   uploadedAt: string;
-  uploadedBy: string;
 }
 
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [mobileNumber, setMobileNumber] = useState('');
+  const [deleteMobileNumber, setDeleteMobileNumber] = useState('');
   const [uploadedPhotos, setUploadedPhotos] = useState<UploadedPhoto[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [error, setError] = useState('');
+  const [deleteError, setDeleteError] = useState('');
+  const [photoToDelete, setPhotoToDelete] = useState<UploadedPhoto | null>(null);
 
   // Load photos from database on component mount
   useEffect(() => {
@@ -43,6 +44,12 @@ export default function Home() {
   const handleUploadClick = () => {
     setIsModalOpen(true);
     setError('');
+  };
+
+  const handleDeleteClick = (photo: UploadedPhoto) => {
+    setPhotoToDelete(photo);
+    setIsDeleteModalOpen(true);
+    setDeleteError('');
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -112,6 +119,40 @@ export default function Home() {
     }
   };
 
+  const handleDeleteSubmit = async () => {
+    if (!photoToDelete) return;
+
+    if (deleteMobileNumber !== '7016418231') {
+      setDeleteError('Sorry, you are not a SHIVLUCK Organizer');
+      return;
+    }
+
+    setIsDeleting(true);
+    
+    try {
+      const response = await fetch(`/api/photos/${photoToDelete.id}?mobileNumber=${deleteMobileNumber}`, {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        // Remove the photo from the local state
+        setUploadedPhotos(prev => prev.filter(photo => photo.id !== photoToDelete.id));
+        setIsDeleteModalOpen(false);
+        setPhotoToDelete(null);
+        setDeleteMobileNumber('');
+        setDeleteError('');
+      } else {
+        const errorData = await response.json();
+        setDeleteError(errorData.error || 'Failed to delete photo');
+      }
+    } catch (error) {
+      console.error('Delete error:', error);
+      setDeleteError('Failed to delete photo. Please try again.');
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   const convertFileToBase64 = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -131,11 +172,32 @@ export default function Home() {
     setError('');
   };
 
+  const handleCloseDeleteModal = () => {
+    setIsDeleteModalOpen(false);
+    setPhotoToDelete(null);
+    setDeleteMobileNumber('');
+    setDeleteError('');
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50">
-      {/* Header with Logo */}
+      {/* Header with Logo and Round Upload Button */}
       <header className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-indigo-600/10 via-purple-600/10 to-pink-600/10"></div>
+        
+        {/* Round Upload Button - Fixed at top */}
+        <div className="absolute top-6 right-6 z-10">
+          <button
+            onClick={handleUploadClick}
+            className="group relative w-16 h-16 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white rounded-full shadow-2xl hover:shadow-3xl transform hover:scale-110 transition-all duration-500 flex items-center justify-center"
+          >
+            <div className="absolute inset-0 bg-white/20 group-hover:bg-white/30 transition-all duration-500 rounded-full"></div>
+            <svg className="relative w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+            </svg>
+          </button>
+        </div>
+
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
           <div className="text-center">
             {/* Shivluck Logo */}
@@ -149,18 +211,6 @@ export default function Home() {
             <p className="text-2xl text-gray-700 mb-12 max-w-3xl mx-auto font-light">
               Professional Photo Gallery
             </p>
-            
-            {/* Upload Button */}
-            <button
-              onClick={handleUploadClick}
-              className="group relative inline-flex items-center px-12 py-6 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white font-bold text-xl rounded-2xl shadow-2xl hover:shadow-3xl transform hover:scale-105 transition-all duration-500 overflow-hidden"
-            >
-              <div className="absolute inset-0 bg-white/20 group-hover:bg-white/30 transition-all duration-500"></div>
-              <svg className="relative mr-4 w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-              </svg>
-              <span className="relative">Upload Image</span>
-            </button>
           </div>
         </div>
       </header>
@@ -177,24 +227,38 @@ export default function Home() {
               {uploadedPhotos.map((photo) => (
                 <div
                   key={photo.id}
-                  className="group bg-white rounded-3xl shadow-xl overflow-hidden transform hover:scale-105 transition-all duration-500 hover:shadow-2xl"
+                  className="group bg-white rounded-3xl shadow-xl overflow-hidden transform hover:scale-105 transition-all duration-500 hover:shadow-2xl relative"
                 >
                   <div className="relative aspect-square">
                     <img
                       src={photo.url}
-                      alt={photo.name}
+                      alt="Uploaded photo"
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    
+                    {/* Delete Button - Only visible on hover */}
+                    <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <button
+                        onClick={() => handleDeleteClick(photo)}
+                        className="bg-red-500 hover:bg-red-600 text-white p-2 rounded-full shadow-lg transform hover:scale-110 transition-all duration-200"
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                      </button>
+                    </div>
                   </div>
                   <div className="p-6">
-                    <p className="text-lg font-semibold text-gray-900 truncate">{photo.name}</p>
                     <p className="text-sm text-gray-500 mt-2">
                       {new Date(photo.uploadedAt).toLocaleDateString('en-US', {
                         year: 'numeric',
                         month: 'long',
                         day: 'numeric'
                       })}
+                    </p>
+                    <p className="text-xs text-gray-400 mt-1">
+                      Phone: {photo.phoneNumber}
                     </p>
                   </div>
                 </div>
@@ -310,6 +374,85 @@ export default function Home() {
                     'Upload Photo'
                   )}
                 </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Modal */}
+      {isDeleteModalOpen && photoToDelete && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full transform transition-all duration-500 scale-100">
+            <div className="p-8">
+              <div className="flex justify-between items-center mb-8">
+                <h2 className="text-3xl font-bold text-gray-900">Delete Photo</h2>
+                <button
+                  onClick={handleCloseDeleteModal}
+                  className="text-gray-400 hover:text-gray-600 transition-colors p-2 hover:bg-gray-100 rounded-full"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+
+              <div className="space-y-8">
+                {/* Warning Message */}
+                <div className="bg-red-50 border-2 border-red-200 rounded-xl p-6 text-center">
+                  <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-xl font-bold text-red-900 mb-2">Are you sure?</h3>
+                  <p className="text-red-700">This action cannot be undone. The photo will be permanently deleted.</p>
+                </div>
+
+                {/* Mobile Number Verification */}
+                <div>
+                  <label className="block text-lg font-semibold text-gray-700 mb-4">
+                    Verify Mobile Number
+                  </label>
+                  <input
+                    type="tel"
+                    value={deleteMobileNumber}
+                    onChange={(e) => setDeleteMobileNumber(e.target.value)}
+                    placeholder="Enter 7016418231 to confirm"
+                    className="w-full px-6 py-4 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-red-100 focus:border-red-500 transition-all duration-200 text-lg"
+                  />
+                </div>
+
+                {/* Error Message */}
+                {deleteError && (
+                  <div className="bg-red-50 border-2 border-red-200 rounded-xl p-4">
+                    <p className="text-red-600 font-medium">{deleteError}</p>
+                  </div>
+                )}
+
+                {/* Action Buttons */}
+                <div className="flex space-x-4">
+                  <button
+                    onClick={handleCloseDeleteModal}
+                    className="flex-1 bg-gray-200 text-gray-800 font-bold py-4 px-6 rounded-xl hover:bg-gray-300 transition-all duration-300 text-lg"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleDeleteSubmit}
+                    disabled={isDeleting}
+                    className="flex-1 bg-red-600 text-white font-bold py-4 px-6 rounded-xl hover:bg-red-700 transform hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-lg"
+                  >
+                    {isDeleting ? (
+                      <div className="flex items-center justify-center">
+                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                        Deleting...
+                      </div>
+                    ) : (
+                      'Delete Photo'
+                    )}
+                  </button>
+                </div>
               </div>
             </div>
           </div>

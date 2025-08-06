@@ -4,9 +4,10 @@ import { prisma } from '@/lib/prisma';
 // DELETE /api/photos/[id] - Delete photo by ID
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const { searchParams } = new URL(request.url);
     const mobileNumber = searchParams.get('mobileNumber');
 
@@ -20,13 +21,13 @@ export async function DELETE(
     // Check if mobile number is authorized
     if (mobileNumber !== '7016418231') {
       return NextResponse.json(
-        { error: 'Unauthorized mobile number. Only 7016418231 can delete photos.' },
+        { error: 'Sorry, you are not a SHIVLUCK Organizer' },
         { status: 401 }
       );
     }
 
     const photo = await prisma.photo.findUnique({
-      where: { id: params.id }
+      where: { id }
     });
 
     if (!photo) {
@@ -38,7 +39,7 @@ export async function DELETE(
 
     // Soft delete the photo
     await prisma.photo.update({
-      where: { id: params.id },
+      where: { id },
       data: { isDeleted: true }
     });
 
