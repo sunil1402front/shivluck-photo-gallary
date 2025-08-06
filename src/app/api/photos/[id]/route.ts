@@ -4,10 +4,10 @@ import { prisma } from '@/lib/prisma';
 // DELETE /api/photos/[id] - Delete photo by ID
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = await params;
+    const { id } = await context.params;
     const { searchParams } = new URL(request.url);
     const mobileNumber = searchParams.get('mobileNumber');
 
