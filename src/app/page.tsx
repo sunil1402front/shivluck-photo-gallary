@@ -138,7 +138,6 @@ export default function Home() {
         <PhotoGallery
           photos={uploadedPhotos}
           onDeleteClick={handleDeleteClick}
-          onUploadClick={handleUploadClick}
         />
       </main>
 

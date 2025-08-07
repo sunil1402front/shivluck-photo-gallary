@@ -5,10 +5,9 @@ import PhotoCard from './PhotoCard';
 interface PhotoGalleryProps {
   photos: UploadedPhoto[];
   onDeleteClick: (photo: UploadedPhoto) => void;
-  onUploadClick: () => void;
 }
 
-export default function PhotoGallery({ photos, onDeleteClick, onUploadClick }: PhotoGalleryProps) {
+export default function PhotoGallery({ photos, onDeleteClick }: PhotoGalleryProps) {
   const [activeTab, setActiveTab] = useState<'interior' | 'certificate'>('interior');
 
   // Filter photos based on active tab
