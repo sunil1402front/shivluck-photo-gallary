@@ -15,7 +15,7 @@ export default function Navbar({ onUploadClick }: NavbarProps) {
   };
 
   return (
-    <nav className="sticky top-0 z-40 bg-gradient-to-r from-indigo-900 via-purple-900 to-pink-900 shadow-2xl px-4 sm:px-8 py-4">
+    <nav className="sticky top-0 z-40 bg-gradient-to-r from-indigo-900/80 via-purple-900/80 to-pink-900/70 shadow-2xl px-4 sm:px-8 py-4 backdrop-blur-md border-b border-white/20">
       <div className="max-w-7xl mx-auto">
         <div className="flex items-center justify-between">
           {/* Logo - Left Side */}
