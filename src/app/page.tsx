@@ -22,6 +22,7 @@ export default function Home() {
   const [deleteError, setDeleteError] = useState('');
   const [photoToDelete, setPhotoToDelete] = useState<UploadedPhoto | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [selectedPhotoForDelete, setSelectedPhotoForDelete] = useState<UploadedPhoto | null>(null);
 
   // Load photos from database on component mount
   useEffect(() => {
@@ -49,9 +50,10 @@ export default function Home() {
   };
 
   const handleDeleteClick = (photo: UploadedPhoto) => {
-    setPhotoToDelete(photo);
+    setSelectedPhotoForDelete(photo);
     setIsDeleteModalOpen(true);
     setDeleteError('');
+    setDeleteMobileNumber('');
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -118,25 +120,25 @@ export default function Home() {
   };
 
   const handleDeleteSubmit = async () => {
-    if (!photoToDelete) return;
+    if (!selectedPhotoForDelete) return;
 
     if (deleteMobileNumber !== '7016418231') {
-      setDeleteError('Sorry, you are not a SHIVLUCK Organizer');
+      setDeleteError('Sorry, You are not SHIVLUCK Organizer');
       return;
     }
 
     setIsDeleting(true);
     
     try {
-      const response = await fetch(`/api/photos/${photoToDelete.id}?mobileNumber=${deleteMobileNumber}`, {
+      const response = await fetch(`/api/photos/${selectedPhotoForDelete.id}?mobileNumber=${deleteMobileNumber}`, {
         method: 'DELETE',
       });
 
       if (response.ok) {
         // Remove the photo from the local state
-        setUploadedPhotos(prev => prev.filter(photo => photo.id !== photoToDelete.id));
+        setUploadedPhotos(prev => prev.filter(photo => photo.id !== selectedPhotoForDelete.id));
         setIsDeleteModalOpen(false);
-        setPhotoToDelete(null);
+        setSelectedPhotoForDelete(null);
         setDeleteMobileNumber('');
         setDeleteError('');
       } else {
@@ -160,7 +162,7 @@ export default function Home() {
 
   const handleCloseDeleteModal = () => {
     setIsDeleteModalOpen(false);
-    setPhotoToDelete(null);
+    setSelectedPhotoForDelete(null);
     setDeleteMobileNumber('');
     setDeleteError('');
   };
@@ -299,11 +301,12 @@ export default function Home() {
                 </p>
                 <div className="w-24 h-1 bg-gradient-to-r from-indigo-600 to-pink-600 mx-auto mt-8 rounded-full"></div>
               </div>
+              
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                 {uploadedPhotos.map((photo) => (
                   <div
                     key={photo.id}
-                    className="group bg-white rounded-3xl shadow-xl overflow-hidden transform hover:scale-105 transition-all duration-500 hover:shadow-2xl relative"
+                    className="group bg-white rounded-3xl shadow-xl overflow-hidden transform hover:scale-105 transition-all duration-500 hover:shadow-2xl relative cursor-pointer"
                   >
                     <div className="relative aspect-square">
                       <img
@@ -313,16 +316,36 @@ export default function Home() {
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                       
-                      {/* Delete Button - Only visible on hover */}
-                      <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <button
-                          onClick={() => handleDeleteClick(photo)}
-                          className="bg-red-500 hover:bg-red-600 text-white p-2 rounded-full shadow-lg transform hover:scale-110 transition-all duration-200"
-                        >
-                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                          </svg>
-                        </button>
+                      {/* Action Buttons - Only visible on hover */}
+                      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center">
+                        <div className="flex space-x-4">
+                          {/* Open Image Button */}
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              window.open(photo.url, '_blank');
+                            }}
+                            className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white p-4 rounded-full shadow-2xl transform hover:scale-110 transition-all duration-300 hover:shadow-3xl"
+                          >
+                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                          </button>
+
+                          {/* Delete Button */}
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDeleteClick(photo);
+                            }}
+                            className="bg-gradient-to-r from-red-500 to-pink-600 text-white p-4 rounded-full shadow-2xl transform hover:scale-110 transition-all duration-300 hover:shadow-3xl"
+                          >
+                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                          </button>
+                        </div>
                       </div>
                     </div>
                     <div className="p-6">
@@ -519,53 +542,52 @@ export default function Home() {
         </div>
       )}
 
-      {/* Delete Modal */}
-      {isDeleteModalOpen && photoToDelete && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full transform transition-all duration-500 scale-100">
-            <div className="p-8">
-              <div className="flex justify-between items-center mb-8">
-                <h2 className="text-3xl font-bold text-gray-900">Delete Photo</h2>
-                <button
-                  onClick={handleCloseDeleteModal}
-                  className="text-gray-400 hover:text-gray-600 transition-colors p-2 hover:bg-gray-100 rounded-full"
-                >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
+      {/* Premium Delete Modal */}
+      {isDeleteModalOpen && selectedPhotoForDelete && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-3xl shadow-2xl max-w-lg w-full transform transition-all duration-500 scale-100 overflow-hidden">
+            {/* Header with gradient */}
+            <div className="bg-gradient-to-r from-red-500 via-pink-500 to-purple-500 p-8 text-white text-center">
+              <div className="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4 backdrop-blur-sm">
+                <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
               </div>
+              <h2 className="text-3xl font-bold mb-2">Delete Photo</h2>
+              <p className="text-white/90">Enter your mobile number to confirm deletion</p>
+            </div>
 
-              <div className="space-y-8">
-                {/* Warning Message */}
-                <div className="bg-red-50 border-2 border-red-200 rounded-xl p-6 text-center">
-                  <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
-                    </svg>
-                  </div>
-                  <h3 className="text-xl font-bold text-red-900 mb-2">Are you sure?</h3>
-                  <p className="text-red-700">This action cannot be undone. The photo will be permanently deleted.</p>
-                </div>
-
-                {/* Mobile Number Verification */}
+            <div className="p-8">
+              <div className="space-y-6">
+                {/* Mobile Number Input */}
                 <div>
                   <label className="block text-lg font-semibold text-gray-700 mb-4">
-                    Verify Mobile Number
+                    Mobile Number Verification
                   </label>
                   <input
                     type="tel"
                     value={deleteMobileNumber}
                     onChange={(e) => setDeleteMobileNumber(e.target.value)}
-                    placeholder="Enter 7016418231 to confirm"
+                    placeholder="Enter 7016418231"
                     className="w-full px-6 py-4 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-red-100 focus:border-red-500 transition-all duration-200 text-lg"
                   />
                 </div>
 
-                {/* Error Message */}
+                {/* Error Message with Lottie-like Animation */}
                 {deleteError && (
-                  <div className="bg-red-50 border-2 border-red-200 rounded-xl p-4">
-                    <p className="text-red-600 font-medium">{deleteError}</p>
+                  <div className="bg-gradient-to-r from-red-50 to-pink-50 border-2 border-red-200 rounded-2xl p-6 text-center animate-pulse">
+                    <div className="w-16 h-16 bg-gradient-to-r from-red-400 to-pink-400 rounded-full flex items-center justify-center mx-auto mb-4 animate-bounce">
+                      <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                      </svg>
+                    </div>
+                    <h3 className="text-xl font-bold text-red-900 mb-2 animate-pulse">Access Denied!</h3>
+                    <p className="text-red-700 font-medium text-lg">{deleteError}</p>
+                    <div className="mt-4 flex justify-center space-x-2">
+                      <div className="w-2 h-2 bg-red-400 rounded-full animate-bounce"></div>
+                      <div className="w-2 h-2 bg-red-400 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
+                      <div className="w-2 h-2 bg-red-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+                    </div>
                   </div>
                 )}
 
@@ -580,7 +602,7 @@ export default function Home() {
                   <button
                     onClick={handleDeleteSubmit}
                     disabled={isDeleting}
-                    className="flex-1 bg-red-600 text-white font-bold py-4 px-6 rounded-xl hover:bg-red-700 transform hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-lg"
+                    className="flex-1 bg-gradient-to-r from-red-500 to-pink-500 text-white font-bold py-4 px-6 rounded-xl hover:from-red-600 hover:to-pink-600 transform hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-lg shadow-lg"
                   >
                     {isDeleting ? (
                       <div className="flex items-center justify-center">
