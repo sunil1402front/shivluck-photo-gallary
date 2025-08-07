@@ -20,6 +20,10 @@ export default function PhotoGallery({ photos, onDeleteClick, onUploadClick }: P
     }
   });
 
+  // Count photos for each category
+  const interiorCount = photos.filter(photo => photo.phoneNumber === 'interior').length;
+  const certificateCount = photos.filter(photo => photo.phoneNumber === 'certificate').length;
+
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
       <div className="text-center mb-16">
@@ -32,31 +36,39 @@ export default function PhotoGallery({ photos, onDeleteClick, onUploadClick }: P
         <div className="w-24 h-1 bg-gradient-to-r from-indigo-600 to-pink-600 mx-auto mt-8 rounded-full"></div>
       </div>
 
-      {/* Tab Navigation */}
+      {/* Compact Tab Navigation */}
       <div className="flex justify-center mb-12">
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-2 shadow-lg border border-white/20">
-          <div className="flex space-x-2">
-            <button
-              onClick={() => setActiveTab('interior')}
-              className={`px-8 py-4 rounded-xl font-semibold transition-all duration-300 ${
-                activeTab === 'interior'
-                  ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg'
-                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
-              }`}
-            >
-              Interior Images
-            </button>
-            <button
-              onClick={() => setActiveTab('certificate')}
-              className={`px-8 py-4 rounded-xl font-semibold transition-all duration-300 ${
-                activeTab === 'certificate'
-                  ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg'
-                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
-              }`}
-            >
-              Certificates
-            </button>
-          </div>
+        <div className="inline-flex bg-white/80 backdrop-blur-sm rounded-xl p-1 shadow-lg border border-white/20">
+          <button
+            onClick={() => setActiveTab('interior')}
+            className={`px-6 py-3 rounded-lg font-semibold text-sm transition-all duration-300 flex items-center space-x-2 ${
+              activeTab === 'interior'
+                ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md'
+                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+            }`}
+          >
+            <span>Interior Images</span>
+            <span className={`px-2 py-1 rounded-full text-xs font-bold ${
+              activeTab === 'interior' ? 'bg-white/20' : 'bg-indigo-100 text-indigo-600'
+            }`}>
+              {interiorCount}
+            </span>
+          </button>
+          <button
+            onClick={() => setActiveTab('certificate')}
+            className={`px-6 py-3 rounded-lg font-semibold text-sm transition-all duration-300 flex items-center space-x-2 ${
+              activeTab === 'certificate'
+                ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md'
+                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+            }`}
+          >
+            <span>Certificates</span>
+            <span className={`px-2 py-1 rounded-full text-xs font-bold ${
+              activeTab === 'certificate' ? 'bg-white/20' : 'bg-indigo-100 text-indigo-600'
+            }`}>
+              {certificateCount}
+            </span>
+          </button>
         </div>
       </div>
 

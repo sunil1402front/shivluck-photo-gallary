@@ -18,7 +18,7 @@ export default function DeleteModal({ isOpen, photo, onClose, onDelete, isLoadin
 
   const handleSubmit = async () => {
     if (!photo) return;
-    if (deletePassword !== '123' && deletePassword !== '456') return;
+    if (deletePassword !== '123456') return;
 
     await onDelete(photo.id, deletePassword);
     
@@ -44,21 +44,18 @@ export default function DeleteModal({ isOpen, photo, onClose, onDelete, isLoadin
             </svg>
           </div>
           <h2 className="text-3xl font-bold mb-2">Delete Photo</h2>
-          <p className="text-white/90">Enter your password to confirm deletion</p>
+          <p className="text-white/90">Enter admin password to confirm deletion</p>
         </div>
 
         <div className="p-8">
           <div className="space-y-6">
             {/* Password Input */}
             <div>
-              <label className="block text-lg font-semibold text-gray-700 mb-4">
-                Password Verification
-              </label>
               <input
                 type="password"
                 value={deletePassword}
                 onChange={(e) => setDeletePassword(e.target.value)}
-                placeholder="Enter password (123 or 456)"
+                placeholder="Enter Password"
                 className="w-full px-6 py-4 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-red-100 focus:border-red-500 transition-all duration-200 text-lg"
               />
             </div>
@@ -91,7 +88,7 @@ export default function DeleteModal({ isOpen, photo, onClose, onDelete, isLoadin
               </button>
               <button
                 onClick={handleSubmit}
-                disabled={isLoading || (deletePassword !== '123' && deletePassword !== '456')}
+                disabled={isLoading || deletePassword !== '123456'}
                 className="flex-1 bg-gradient-to-r from-red-500 to-pink-500 text-white font-bold py-4 px-6 rounded-xl hover:from-red-600 hover:to-pink-600 transform hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-lg shadow-lg"
               >
                 {isLoading ? (

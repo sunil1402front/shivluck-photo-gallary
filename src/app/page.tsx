@@ -86,8 +86,8 @@ export default function Home() {
   };
 
   const handleDeleteSubmit = async (photoId: string, password: string) => {
-    if (password !== '123' && password !== '456') {
-      setDeleteError('Invalid password. Please enter 123 or 456');
+    if (password !== '123456') {
+      setDeleteError('Invalid admin password. Please enter 123456');
       return;
     }
 

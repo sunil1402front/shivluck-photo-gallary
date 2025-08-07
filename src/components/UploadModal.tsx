@@ -13,6 +13,7 @@ interface UploadModalProps {
 export default function UploadModal({ isOpen, onClose, onSubmit, isLoading, error }: UploadModalProps) {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [password, setPassword] = useState('');
+  const [category, setCategory] = useState<'interior' | 'certificate'>('interior');
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -33,27 +34,42 @@ export default function UploadModal({ isOpen, onClose, onSubmit, isLoading, erro
 
   const handleSubmit = async () => {
     if (!selectedImage) return;
-    if (password !== '123' && password !== '456') return;
-
-    // Determine phone number based on password
-    let phoneNumber = '';
-    if (password === '123') {
-      phoneNumber = 'interior'; // For interior images
-    } else if (password === '456') {
-      phoneNumber = 'certificate'; // For certificates
+    
+    // Validate password based on selected category
+    if (category === 'interior' && password !== '123') {
+      return;
     }
+    if (category === 'certificate' && password !== '456') {
+      return;
+    }
+
+    // Determine phone number based on category
+    const phoneNumber = category;
 
     await onSubmit(selectedImage, phoneNumber);
     
     // Reset form on successful submission
     setSelectedImage(null);
     setPassword('');
+    setCategory('interior');
   };
 
   const handleClose = () => {
     setSelectedImage(null);
     setPassword('');
+    setCategory('interior');
     onClose();
+  };
+
+  // Check if password is valid for selected category
+  const isPasswordValid = () => {
+    if (category === 'interior') {
+      return password === '123';
+    }
+    if (category === 'certificate') {
+      return password === '456';
+    }
+    return false;
   };
 
   if (!isOpen) return null;
@@ -104,6 +120,21 @@ export default function UploadModal({ isOpen, onClose, onSubmit, isLoading, erro
               </div>
             </div>
 
+            {/* Category Selection */}
+            <div>
+              <label className="block text-lg font-semibold text-gray-700 mb-4">
+                Category
+              </label>
+              <select
+                value={category}
+                onChange={(e) => setCategory(e.target.value as 'interior' | 'certificate')}
+                className="w-full px-6 py-4 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-indigo-100 focus:border-indigo-500 transition-all duration-200 text-lg"
+              >
+                <option value="interior">Interior Image</option>
+                <option value="certificate">Certificate</option>
+              </select>
+            </div>
+
             {/* Password */}
             <div>
               <label className="block text-lg font-semibold text-gray-700 mb-4">
@@ -113,12 +144,9 @@ export default function UploadModal({ isOpen, onClose, onSubmit, isLoading, erro
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter password (123 for Interior, 456 for Certificate)"
+                placeholder="Enter Password"
                 className="w-full px-6 py-4 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-indigo-100 focus:border-indigo-500 transition-all duration-200 text-lg"
               />
-              <p className="text-sm text-gray-500 mt-2">
-                123 = Interior Image, 456 = Certificate
-              </p>
             </div>
 
             {/* Error Message */}
@@ -131,7 +159,7 @@ export default function UploadModal({ isOpen, onClose, onSubmit, isLoading, erro
             {/* Submit Button */}
             <button
               onClick={handleSubmit}
-              disabled={isLoading || !selectedImage || (password !== '123' && password !== '456')}
+              disabled={isLoading || !selectedImage || !isPasswordValid()}
               className="w-full bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white font-bold py-4 px-6 rounded-xl hover:shadow-lg transform hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-lg"
             >
               {isLoading ? (

@@ -19,9 +19,9 @@ export async function DELETE(
     }
 
     // Check if password is authorized
-    if (password !== '123' && password !== '456') {
+    if (password !== '123456') {
       return NextResponse.json(
-        { error: 'Invalid password. Please enter 123 or 456' },
+        { error: 'Invalid admin password. Please enter 123456' },
         { status: 401 }
       );
     }
