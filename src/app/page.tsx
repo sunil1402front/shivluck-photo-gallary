@@ -111,21 +111,13 @@ export default function Home() {
     }
   };
 
-  const handleDeleteSubmit = async (photoId: string, password: string) => {
-    if (password !== "123456") {
-      setDeleteError("Invalid admin password. Please enter 123456");
-      return;
-    }
-
+  const handleDeleteSubmit = async (photoId: string) => {
     setIsDeleting(true);
 
     try {
-      const response = await fetch(
-        `/api/photos/${photoId}?password=${password}`,
-        {
-          method: "DELETE",
-        }
-      );
+      const response = await fetch(`/api/photos/${photoId}`, {
+        method: "DELETE",
+      });
 
       if (response.ok) {
         // Remove the photo from the local state
