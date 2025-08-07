@@ -5,14 +5,14 @@ import { useState } from 'react';
 interface UploadModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (file: File, mobileNumber: string) => Promise<void>;
+  onSubmit: (file: File, phoneNumber: string) => Promise<void>;
   isLoading: boolean;
   error: string;
 }
 
 export default function UploadModal({ isOpen, onClose, onSubmit, isLoading, error }: UploadModalProps) {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
-  const [mobileNumber, setMobileNumber] = useState('');
+  const [password, setPassword] = useState('');
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -33,18 +33,26 @@ export default function UploadModal({ isOpen, onClose, onSubmit, isLoading, erro
 
   const handleSubmit = async () => {
     if (!selectedImage) return;
-    if (mobileNumber !== '7016418231') return;
+    if (password !== '123' && password !== '456') return;
 
-    await onSubmit(selectedImage, mobileNumber);
+    // Determine phone number based on password
+    let phoneNumber = '';
+    if (password === '123') {
+      phoneNumber = 'interior'; // For interior images
+    } else if (password === '456') {
+      phoneNumber = 'certificate'; // For certificates
+    }
+
+    await onSubmit(selectedImage, phoneNumber);
     
     // Reset form on successful submission
     setSelectedImage(null);
-    setMobileNumber('');
+    setPassword('');
   };
 
   const handleClose = () => {
     setSelectedImage(null);
-    setMobileNumber('');
+    setPassword('');
     onClose();
   };
 
@@ -96,18 +104,21 @@ export default function UploadModal({ isOpen, onClose, onSubmit, isLoading, erro
               </div>
             </div>
 
-            {/* Mobile Number */}
+            {/* Password */}
             <div>
               <label className="block text-lg font-semibold text-gray-700 mb-4">
-                Mobile Number
+                Password
               </label>
               <input
-                type="tel"
-                value={mobileNumber}
-                onChange={(e) => setMobileNumber(e.target.value)}
-                placeholder="Enter 7016418231"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter password (123 for Interior, 456 for Certificate)"
                 className="w-full px-6 py-4 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-indigo-100 focus:border-indigo-500 transition-all duration-200 text-lg"
               />
+              <p className="text-sm text-gray-500 mt-2">
+                123 = Interior Image, 456 = Certificate
+              </p>
             </div>
 
             {/* Error Message */}
@@ -120,7 +131,7 @@ export default function UploadModal({ isOpen, onClose, onSubmit, isLoading, erro
             {/* Submit Button */}
             <button
               onClick={handleSubmit}
-              disabled={isLoading || !selectedImage || mobileNumber !== '7016418231'}
+              disabled={isLoading || !selectedImage || (password !== '123' && password !== '456')}
               className="w-full bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white font-bold py-4 px-6 rounded-xl hover:shadow-lg transform hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-lg"
             >
               {isLoading ? (

@@ -44,14 +44,14 @@ export default function Home() {
     setDeleteError('');
   };
 
-  const handleUploadSubmit = async (file: File, mobileNumber: string) => {
+  const handleUploadSubmit = async (file: File, phoneNumber: string) => {
     if (!file) {
       setError('Please select an image');
       return;
     }
 
-    if (mobileNumber !== '7016418231') {
-      setError('Invalid mobile number. Please enter 7016418231');
+    if (phoneNumber !== 'interior' && phoneNumber !== 'certificate') {
+      setError('Invalid password. Please enter 123 for Interior or 456 for Certificate');
       return;
     }
 
@@ -61,7 +61,7 @@ export default function Home() {
       // Create FormData for file upload to Vercel Blob
       const formData = new FormData();
       formData.append('file', file);
-      formData.append('phoneNumber', mobileNumber);
+      formData.append('phoneNumber', phoneNumber);
       
       const response = await fetch('/api/photos', {
         method: 'POST',
@@ -85,16 +85,16 @@ export default function Home() {
     }
   };
 
-  const handleDeleteSubmit = async (photoId: string, mobileNumber: string) => {
-    if (mobileNumber !== '7016418231') {
-      setDeleteError('Sorry, You are not SHIVLUCK Organizer');
+  const handleDeleteSubmit = async (photoId: string, password: string) => {
+    if (password !== '123' && password !== '456') {
+      setDeleteError('Invalid password. Please enter 123 or 456');
       return;
     }
 
     setIsDeleting(true);
     
     try {
-      const response = await fetch(`/api/photos/${photoId}?mobileNumber=${mobileNumber}`, {
+      const response = await fetch(`/api/photos/${photoId}?password=${password}`, {
         method: 'DELETE',
       });
 

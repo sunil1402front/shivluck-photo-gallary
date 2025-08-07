@@ -9,19 +9,19 @@ export async function DELETE(
   try {
     const { id } = await context.params;
     const { searchParams } = new URL(request.url);
-    const mobileNumber = searchParams.get('mobileNumber');
+    const password = searchParams.get('password');
 
-    if (!mobileNumber) {
+    if (!password) {
       return NextResponse.json(
-        { error: 'Mobile number is required' },
+        { error: 'Password is required' },
         { status: 400 }
       );
     }
 
-    // Check if mobile number is authorized
-    if (mobileNumber !== '7016418231') {
+    // Check if password is authorized
+    if (password !== '123' && password !== '456') {
       return NextResponse.json(
-        { error: 'Sorry, you are not a SHIVLUCK Organizer' },
+        { error: 'Invalid password. Please enter 123 or 456' },
         { status: 401 }
       );
     }

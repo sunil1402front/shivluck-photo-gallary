@@ -57,10 +57,10 @@ export async function POST(request: NextRequest) {
 
 
     
-    // Validate mobile number
-    if (phoneNumber !== '7016418231') {
+    // Validate phone number (category)
+    if (phoneNumber !== 'interior' && phoneNumber !== 'certificate') {
       return NextResponse.json(
-        { error: 'Unauthorized mobile number. Only 7016418231 can upload photos.' },
+        { error: 'Invalid category. Must be "interior" or "certificate".' },
         { status: 400 }
       );
     }
