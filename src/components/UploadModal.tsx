@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
+import { useState } from "react";
 
 interface UploadModalProps {
   isOpen: boolean;
@@ -10,28 +10,36 @@ interface UploadModalProps {
   error: string;
 }
 
-export default function UploadModal({ isOpen, onClose, onSubmit, isLoading, error }: UploadModalProps) {
+export default function UploadModal({
+  isOpen,
+  onClose,
+  onSubmit,
+  isLoading,
+  error,
+}: UploadModalProps) {
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
-  const [password, setPassword] = useState('');
-  const [category, setCategory] = useState<'interior' | 'certificate'>('interior');
+  const [password, setPassword] = useState("");
+  const [category, setCategory] = useState<"interior" | "certificate">(
+    "interior"
+  );
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files ?? []);
     // Filter valid images and size
-    const validFiles = files.filter(file =>
-      file.type.startsWith('image/') && file.size <= 10 * 1024 * 1024
+    const validFiles = files.filter(
+      (file) => file.type.startsWith("image/") && file.size <= 10 * 1024 * 1024
     );
     setSelectedImages(validFiles);
   };
 
   const handleSubmit = async () => {
     if (selectedImages.length === 0) return;
-    
+
     // Validate password based on selected category
-    if (category === 'interior' && password !== '123') {
+    if (category === "interior" && password !== "123") {
       return;
     }
-    if (category === 'certificate' && password !== '456') {
+    if (category === "certificate" && password !== "456") {
       return;
     }
 
@@ -39,27 +47,27 @@ export default function UploadModal({ isOpen, onClose, onSubmit, isLoading, erro
     const phoneNumber = category;
 
     await onSubmit(selectedImages, phoneNumber);
-    
+
     // Reset form on successful submission
     setSelectedImages([]);
-    setPassword('');
-    setCategory('interior');
+    setPassword("");
+    setCategory("interior");
   };
 
   const handleClose = () => {
     setSelectedImages([]);
-    setPassword('');
-    setCategory('interior');
+    setPassword("");
+    setCategory("interior");
     onClose();
   };
 
   // Check if password is valid for selected category
   const isPasswordValid = () => {
-    if (category === 'interior') {
-      return password === '123';
+    if (category === "interior") {
+      return password === "123";
     }
-    if (category === 'certificate') {
-      return password === '456';
+    if (category === "certificate") {
+      return password === "456";
     }
     return false;
   };
@@ -76,8 +84,18 @@ export default function UploadModal({ isOpen, onClose, onSubmit, isLoading, erro
               onClick={handleClose}
               className="text-gray-400 hover:text-gray-600 p-1 rounded-full hover:bg-gray-100 transition-colors"
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
             </button>
           </div>
@@ -99,19 +117,29 @@ export default function UploadModal({ isOpen, onClose, onSubmit, isLoading, erro
                 />
                 <label htmlFor="image-upload" className="cursor-pointer">
                   <div className="w-12 h-12 bg-gradient-to-r from-indigo-100 to-purple-100 rounded-full flex items-center justify-center mx-auto mb-2">
-                    <svg className="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                    <svg
+                      className="w-6 h-6 text-indigo-600"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                      />
                     </svg>
                   </div>
                   <p className="text-sm font-medium text-gray-700 mb-1">
                     {selectedImages.length > 0
-                      ? selectedImages.map(img => img.name).join(', ')
-                      : 'Click to select photo(s)'}
+                      ? selectedImages.map((img) => img.name).join(", ")
+                      : "Click to select photo(s)"}
                   </p>
                   <p className="text-xs text-gray-500">
                     {selectedImages.length > 0
                       ? `Total: ${selectedImages.length} image(s)`
-                      : 'All image formats supported'}
+                      : "All image formats supported"}
                   </p>
                 </label>
               </div>
@@ -125,29 +153,49 @@ export default function UploadModal({ isOpen, onClose, onSubmit, isLoading, erro
               <div className="relative">
                 <select
                   value={category}
-                  onChange={(e) => setCategory(e.target.value as 'interior' | 'certificate')}
-                  className="w-full px-3 py-2 border border-gray-200 rounded-md focus:ring-2 focus:ring-indigo-100 focus:border-indigo-400 text-sm bg-white cursor-pointer"
+                  onChange={(e) =>
+                    setCategory(e.target.value as "interior" | "certificate")
+                  }
+                  className="w-full px-3 py-2 border border-gray-200 rounded-md focus:ring-2 focus:ring-indigo-100 focus:border-indigo-400 text-sm bg-white cursor-pointer appearance-none"
                 >
                   <option value="interior">🏠 Interior Image</option>
                   <option value="certificate">🏆 Certificate</option>
                 </select>
                 <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                  <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  <svg
+                    className="w-4 h-4 text-gray-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 9l-7 7-7-7"
+                    />
                   </svg>
                 </div>
               </div>
               <div className="mt-1 p-2 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-md border border-indigo-100">
                 <div className="flex items-center space-x-2">
-                  <div className={`w-2 h-2 rounded-full ${category === 'interior' ? 'bg-indigo-500' : 'bg-purple-500'}`}></div>
+                  <div
+                    className={`w-2 h-2 rounded-full ${
+                      category === "interior"
+                        ? "bg-indigo-500"
+                        : "bg-purple-500"
+                    }`}
+                  ></div>
                   <span className="text-xs font-medium text-gray-700">
-                    {category === 'interior' ? 'Interior Design Projects' : 'Professional Certificates'}
+                    {category === "interior"
+                      ? "Interior Design Projects"
+                      : "Professional Certificates"}
                   </span>
                 </div>
                 <p className="text-xs text-gray-500 mt-1 ml-4">
-                  {category === 'interior'
-                    ? 'Showcase your interior design work'
-                    : 'Display your professional certifications'}
+                  {category === "interior"
+                    ? "Showcase your interior design work"
+                    : "Display your professional certifications"}
                 </p>
               </div>
             </div>
@@ -176,7 +224,9 @@ export default function UploadModal({ isOpen, onClose, onSubmit, isLoading, erro
             {/* Submit Button */}
             <button
               onClick={handleSubmit}
-              disabled={isLoading || selectedImages.length === 0 || !isPasswordValid()}
+              disabled={
+                isLoading || selectedImages.length === 0 || !isPasswordValid()
+              }
               className="w-full bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white font-bold py-2 px-3 rounded-md hover:shadow-md hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
             >
               {isLoading ? (
@@ -185,7 +235,9 @@ export default function UploadModal({ isOpen, onClose, onSubmit, isLoading, erro
                   Uploading...
                 </div>
               ) : (
-                `Upload ${selectedImages.length} Photo${selectedImages.length !== 1 ? 's' : ''}`
+                `Upload ${selectedImages.length} Photo${
+                  selectedImages.length !== 1 ? "s" : ""
+                }`
               )}
             </button>
           </div>
@@ -193,4 +245,4 @@ export default function UploadModal({ isOpen, onClose, onSubmit, isLoading, erro
       </div>
     </div>
   );
-} 
+}
