@@ -1,8 +1,14 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { UploadedPhoto } from '../types';
-import { Navbar, Footer, PhotoGallery, UploadModal, DeleteModal } from '../components';
+import { useEffect, useState } from "react";
+import {
+  DeleteModal,
+  Footer,
+  Navbar,
+  PhotoGallery,
+  UploadModal,
+} from "../components";
+import { UploadedPhoto } from "../types";
 
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -10,9 +16,10 @@ export default function Home() {
   const [uploadedPhotos, setUploadedPhotos] = useState<UploadedPhoto[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [error, setError] = useState('');
-  const [deleteError, setDeleteError] = useState('');
-  const [selectedPhotoForDelete, setSelectedPhotoForDelete] = useState<UploadedPhoto | null>(null);
+  const [error, setError] = useState("");
+  const [deleteError, setDeleteError] = useState("");
+  const [selectedPhotoForDelete, setSelectedPhotoForDelete] =
+    useState<UploadedPhoto | null>(null);
 
   // Load photos from database on component mount
   useEffect(() => {
@@ -21,96 +28,108 @@ export default function Home() {
 
   const fetchPhotos = async () => {
     try {
-      const response = await fetch('/api/photos');
+      const response = await fetch("/api/photos");
       if (response.ok) {
         const photos = await response.json();
         setUploadedPhotos(photos);
       } else {
-        console.error('Failed to fetch photos');
+        console.error("Failed to fetch photos");
       }
     } catch (error) {
-      console.error('Error fetching photos:', error);
+      console.error("Error fetching photos:", error);
     }
   };
 
   const handleUploadClick = () => {
     setIsModalOpen(true);
-    setError('');
+    setError("");
   };
 
   const handleDeleteClick = (photo: UploadedPhoto) => {
     setSelectedPhotoForDelete(photo);
     setIsDeleteModalOpen(true);
-    setDeleteError('');
+    setDeleteError("");
   };
 
-  const handleUploadSubmit = async (file: File, phoneNumber: string) => {
-    if (!file) {
-      setError('Please select an image');
+  const handleUploadSubmit = async (files: File[], phoneNumber: string) => {
+    if (files.length === 0) {
+      setError("Please select at least one image");
       return;
     }
 
-    if (phoneNumber !== 'interior' && phoneNumber !== 'certificate') {
-      setError('Invalid password. Please enter 123 for Interior or 456 for Certificate');
+    if (phoneNumber !== "interior" && phoneNumber !== "certificate") {
+      setError(
+        "Invalid password. Please enter 123 for Interior or 456 for Certificate"
+      );
       return;
     }
 
     setIsLoading(true);
-    
-    try {
-      // Create FormData for file upload to Vercel Blob
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('phoneNumber', phoneNumber);
-      
-      const response = await fetch('/api/photos', {
-        method: 'POST',
-        body: formData,
-      });
 
-      if (response.ok) {
-        const newPhoto = await response.json();
-        setUploadedPhotos(prev => [newPhoto, ...prev]);
+    try {
+      const uploadedPhotos: UploadedPhoto[] = [];
+      for (const file of files) {
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("phoneNumber", phoneNumber);
+
+        const response = await fetch("/api/photos", {
+          method: "POST",
+          body: formData,
+        });
+
+        if (response.ok) {
+          const newPhoto = await response.json();
+          uploadedPhotos.push(newPhoto);
+        } else {
+          const errorData = await response.json();
+          setError(errorData.error || "Failed to upload photo");
+        }
+      }
+      if (uploadedPhotos.length > 0) {
+        setUploadedPhotos((prev) => [...uploadedPhotos, ...prev]);
         setIsModalOpen(false);
-        setError('');
-      } else {
-        const errorData = await response.json();
-        setError(errorData.error || 'Failed to upload photo');
+        setError("");
       }
     } catch (error) {
-      console.error('Upload error:', error);
-      setError('Failed to upload photo. Please try again.');
+      console.error("Upload error:", error);
+      setError("Failed to upload photo. Please try again.");
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleDeleteSubmit = async (photoId: string, password: string) => {
-    if (password !== '123456') {
-      setDeleteError('Invalid admin password. Please enter 123456');
+    if (password !== "123456") {
+      setDeleteError("Invalid admin password. Please enter 123456");
       return;
     }
 
     setIsDeleting(true);
-    
+
     try {
-      const response = await fetch(`/api/photos/${photoId}?password=${password}`, {
-        method: 'DELETE',
-      });
+      const response = await fetch(
+        `/api/photos/${photoId}?password=${password}`,
+        {
+          method: "DELETE",
+        }
+      );
 
       if (response.ok) {
         // Remove the photo from the local state
-        setUploadedPhotos(prev => prev.filter(photo => photo.id !== photoId));
+        setUploadedPhotos((prev) =>
+          prev.filter((photo) => photo.id !== photoId)
+        );
         setIsDeleteModalOpen(false);
         setSelectedPhotoForDelete(null);
-        setDeleteError('');
+        setDeleteError("");
       } else {
         const errorData = await response.json();
-        setDeleteError(errorData.error || 'Failed to delete photo');
+        setDeleteError(errorData.error || "Failed to delete photo");
       }
     } catch (error) {
-      console.error('Delete error:', error);
-      setDeleteError('Failed to delete photo. Please try again.');
+      console.error("Delete error:", error);
+      setDeleteError("Failed to delete photo. Please try again.");
     } finally {
       setIsDeleting(false);
     }
@@ -118,13 +137,13 @@ export default function Home() {
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    setError('');
+    setError("");
   };
 
   const handleCloseDeleteModal = () => {
     setIsDeleteModalOpen(false);
     setSelectedPhotoForDelete(null);
-    setDeleteError('');
+    setDeleteError("");
   };
 
   return (

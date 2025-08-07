@@ -5,35 +5,27 @@ import { useState } from 'react';
 interface UploadModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (file: File, phoneNumber: string) => Promise<void>;
+  onSubmit: (files: File[], phoneNumber: string) => Promise<void>;
   isLoading: boolean;
   error: string;
 }
 
 export default function UploadModal({ isOpen, onClose, onSubmit, isLoading, error }: UploadModalProps) {
-  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const [password, setPassword] = useState('');
   const [category, setCategory] = useState<'interior' | 'certificate'>('interior');
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      // Validate file type
-      if (!file.type.startsWith('image/')) {
-        return;
-      }
-
-      // Validate file size (10MB limit)
-      if (file.size > 10 * 1024 * 1024) {
-        return;
-      }
-
-      setSelectedImage(file);
-    }
+    const files = Array.from(e.target.files ?? []);
+    // Filter valid images and size
+    const validFiles = files.filter(file =>
+      file.type.startsWith('image/') && file.size <= 10 * 1024 * 1024
+    );
+    setSelectedImages(validFiles);
   };
 
   const handleSubmit = async () => {
-    if (!selectedImage) return;
+    if (selectedImages.length === 0) return;
     
     // Validate password based on selected category
     if (category === 'interior' && password !== '123') {
@@ -46,16 +38,16 @@ export default function UploadModal({ isOpen, onClose, onSubmit, isLoading, erro
     // Determine phone number based on category
     const phoneNumber = category;
 
-    await onSubmit(selectedImage, phoneNumber);
+    await onSubmit(selectedImages, phoneNumber);
     
     // Reset form on successful submission
-    setSelectedImage(null);
+    setSelectedImages([]);
     setPassword('');
     setCategory('interior');
   };
 
   const handleClose = () => {
-    setSelectedImage(null);
+    setSelectedImages([]);
     setPassword('');
     setCategory('interior');
     onClose();
@@ -79,7 +71,7 @@ export default function UploadModal({ isOpen, onClose, onSubmit, isLoading, erro
       <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full transform transition-all duration-500 scale-100">
         <div className="p-8">
           <div className="flex justify-between items-center mb-8">
-            <h2 className="text-3xl font-bold text-gray-900">Upload Photo</h2>
+            <h2 className="text-3xl font-bold text-gray-900">Upload Photos</h2>
             <button
               onClick={handleClose}
               className="text-gray-400 hover:text-gray-600 transition-colors p-2 hover:bg-gray-100 rounded-full"
@@ -94,7 +86,7 @@ export default function UploadModal({ isOpen, onClose, onSubmit, isLoading, erro
             {/* Image Upload */}
             <div>
               <label className="block text-lg font-semibold text-gray-700 mb-4">
-                Select Photo
+                Select Photos
               </label>
               <div className="border-3 border-dashed border-indigo-300 rounded-2xl p-8 text-center hover:border-indigo-400 transition-colors bg-gradient-to-br from-indigo-50 to-purple-50">
                 <input
@@ -103,6 +95,7 @@ export default function UploadModal({ isOpen, onClose, onSubmit, isLoading, erro
                   onChange={handleImageChange}
                   className="hidden"
                   id="image-upload"
+                  multiple 
                 />
                 <label htmlFor="image-upload" className="cursor-pointer">
                   <div className="w-20 h-20 bg-gradient-to-r from-indigo-100 to-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -111,10 +104,14 @@ export default function UploadModal({ isOpen, onClose, onSubmit, isLoading, erro
                     </svg>
                   </div>
                   <p className="text-lg font-medium text-gray-700 mb-2">
-                    {selectedImage ? selectedImage.name : 'Click to select photo'}
+                    {selectedImages.length > 0
+                      ? selectedImages.map(img => img.name).join(', ')
+                      : 'Click to select photo(s)'}
                   </p>
                   <p className="text-sm text-gray-500">
-                    {selectedImage ? `Size: ${(selectedImage.size / 1024 / 1024).toFixed(2)} MB` : 'All image formats supported'}
+                    {selectedImages.length > 0
+                      ? `Total: ${selectedImages.length} image(s)`
+                      : 'All image formats supported'}
                   </p>
                 </label>
               </div>
@@ -180,7 +177,7 @@ export default function UploadModal({ isOpen, onClose, onSubmit, isLoading, erro
             {/* Submit Button */}
             <button
               onClick={handleSubmit}
-              disabled={isLoading || !selectedImage || !isPasswordValid()}
+              disabled={isLoading || selectedImages.length === 0 || !isPasswordValid()}
               className="w-full bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white font-bold py-4 px-6 rounded-xl hover:shadow-lg transform hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-lg"
             >
               {isLoading ? (
@@ -189,7 +186,7 @@ export default function UploadModal({ isOpen, onClose, onSubmit, isLoading, erro
                   Uploading...
                 </div>
               ) : (
-                'Upload Photo'
+                `Upload ${selectedImages.length} Photo${selectedImages.length !== 1 ? 's' : ''}`
               )}
             </button>
           </div>
