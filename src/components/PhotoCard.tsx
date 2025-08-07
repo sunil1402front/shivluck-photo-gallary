@@ -6,9 +6,9 @@ interface PhotoCardProps {
 }
 
 export default function PhotoCard({ photo, onDeleteClick }: PhotoCardProps) {
-  // Determine the overlay text based on photo category
-  const overlayText = photo.phoneNumber === 'interior' ? 'Interior By Shivluck' : 'Certified By Shivluck';
-  const overlayColor = photo.phoneNumber === 'interior' ? 'from-indigo-600/90 to-purple-600/90' : 'from-green-600/90 to-emerald-600/90';
+  // Determine the footer text based on photo category
+  const footerText = photo.phoneNumber === 'interior' ? 'Interior By Shivluck' : 'Certified By Shivluck';
+  const footerColor = photo.phoneNumber === 'interior' ? 'from-indigo-500 to-purple-600' : 'from-pink-500 to-rose-600';
 
   return (
     <div className="group bg-white rounded-3xl shadow-xl overflow-hidden transform hover:scale-105 transition-all duration-500 hover:shadow-2xl relative cursor-pointer">
@@ -18,13 +18,6 @@ export default function PhotoCard({ photo, onDeleteClick }: PhotoCardProps) {
           alt="Uploaded photo"
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
         />
-        
-        {/* Category Overlay Text */}
-        <div className="absolute bottom-4 left-4 right-4">
-          <div className={`bg-gradient-to-r ${overlayColor} text-white px-4 py-2 rounded-xl shadow-lg backdrop-blur-sm`}>
-            <p className="text-sm font-bold text-center">{overlayText}</p>
-          </div>
-        </div>
 
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
         
@@ -61,16 +54,16 @@ export default function PhotoCard({ photo, onDeleteClick }: PhotoCardProps) {
         </div>
       </div>
       <div className="p-6">
-        <p className="text-sm text-gray-500 mt-2">
+        <p className="text-sm text-gray-500 mb-3">
           {new Date(photo.uploadedAt).toLocaleDateString('en-US', {
             year: 'numeric',
             month: 'long',
             day: 'numeric'
           })}
         </p>
-        <p className="text-xs text-gray-400 mt-2">
-          Manage By : <span className="font-bold bg-gradient-to-r from-indigo-400 via-purple-600 to-pink-500 text-white px-2 py-1 rounded-md">SHIVLUCK Interior</span>
-        </p>
+        <div className={`bg-gradient-to-r ${footerColor} text-white px-4 py-2 rounded-xl shadow-lg text-center`}>
+          <p className="text-sm font-bold">{footerText}</p>
+        </div>
       </div>
     </div>
   );
