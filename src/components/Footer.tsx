@@ -21,7 +21,16 @@ export default function Footer() {
             <h3 className="text-lg font-semibold mb-4">Contact</h3>
             <div className="space-y-2 text-gray-300">
               <p>Email: shivluck999@gmail.com</p>
-              <p>Phone: +91 9898167270</p>
+              <div className="space-y-1">
+                <p className="flex items-center justify-center space-x-2">
+                  <span className="text-indigo-300 font-semibold">KP Suthar:</span>
+                  <span>9898167270</span>
+                </p>
+                <p className="flex items-center justify-center space-x-2">
+                  <span className="text-indigo-300 font-semibold">Rajesh Suthar:</span>
+                  <span>8320785875</span>
+                </p>
+              </div>
             </div>
           </div>
 

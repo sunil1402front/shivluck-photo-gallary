@@ -125,14 +125,35 @@ export default function UploadModal({ isOpen, onClose, onSubmit, isLoading, erro
               <label className="block text-lg font-semibold text-gray-700 mb-4">
                 Category
               </label>
-              <select
-                value={category}
-                onChange={(e) => setCategory(e.target.value as 'interior' | 'certificate')}
-                className="w-full px-6 py-4 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-indigo-100 focus:border-indigo-500 transition-all duration-200 text-lg"
-              >
-                <option value="interior">Interior Image</option>
-                <option value="certificate">Certificate</option>
-              </select>
+              <div className="relative">
+                <select
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value as 'interior' | 'certificate')}
+                  className="w-full px-6 py-4 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-indigo-100 focus:border-indigo-500 transition-all duration-200 text-lg appearance-none bg-white cursor-pointer hover:border-indigo-300"
+                >
+                  <option value="interior" className="py-2">🏠 Interior Image</option>
+                  <option value="certificate" className="py-2">🏆 Certificate</option>
+                </select>
+                <div className="absolute inset-y-0 right-0 flex items-center pr-6 pointer-events-none">
+                  <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+              </div>
+              <div className="mt-3 p-4 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl border border-indigo-100">
+                <div className="flex items-center space-x-3">
+                  <div className={`w-3 h-3 rounded-full ${category === 'interior' ? 'bg-indigo-500' : 'bg-purple-500'}`}></div>
+                  <span className="text-sm font-medium text-gray-700">
+                    {category === 'interior' ? 'Interior Design Projects' : 'Professional Certificates'}
+                  </span>
+                </div>
+                <p className="text-xs text-gray-500 mt-1 ml-6">
+                  {category === 'interior' 
+                    ? 'Showcase your interior design work and projects' 
+                    : 'Display your professional certifications and achievements'
+                  }
+                </p>
+              </div>
             </div>
 
             {/* Password */}

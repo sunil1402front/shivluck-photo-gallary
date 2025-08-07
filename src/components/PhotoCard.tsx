@@ -6,6 +6,10 @@ interface PhotoCardProps {
 }
 
 export default function PhotoCard({ photo, onDeleteClick }: PhotoCardProps) {
+  // Determine the overlay text based on photo category
+  const overlayText = photo.phoneNumber === 'interior' ? 'Interior By Shivluck' : 'Certified By Shivluck';
+  const overlayColor = photo.phoneNumber === 'interior' ? 'from-indigo-600/90 to-purple-600/90' : 'from-green-600/90 to-emerald-600/90';
+
   return (
     <div className="group bg-white rounded-3xl shadow-xl overflow-hidden transform hover:scale-105 transition-all duration-500 hover:shadow-2xl relative cursor-pointer">
       <div className="relative aspect-square">
@@ -14,6 +18,14 @@ export default function PhotoCard({ photo, onDeleteClick }: PhotoCardProps) {
           alt="Uploaded photo"
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
         />
+        
+        {/* Category Overlay Text */}
+        <div className="absolute bottom-4 left-4 right-4">
+          <div className={`bg-gradient-to-r ${overlayColor} text-white px-4 py-2 rounded-xl shadow-lg backdrop-blur-sm`}>
+            <p className="text-sm font-bold text-center">{overlayText}</p>
+          </div>
+        </div>
+
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
         
         {/* Action Buttons - Only visible on hover */}
