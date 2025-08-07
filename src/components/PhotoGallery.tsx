@@ -97,15 +97,6 @@ export default function PhotoGallery({ photos, onDeleteClick, onUploadClick }: P
               <p className="text-gray-600 mb-8">
                 Start building your {activeTab === 'interior' ? 'interior design' : 'certificate'} gallery by uploading your first image
               </p>
-              <button
-                onClick={onUploadClick}
-                className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl hover:shadow-lg transform hover:scale-105 transition-all duration-300"
-              >
-                <svg className="mr-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                </svg>
-                Upload {activeTab === 'interior' ? 'Interior Image' : 'Certificate'}
-              </button>
             </div>
           </div>
         </div>
