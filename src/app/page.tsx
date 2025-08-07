@@ -9,6 +9,7 @@ import {
   UploadModal,
 } from "../components";
 import { UploadedPhoto } from "../types";
+import ConfirmationModal from '../components/ConfirmationModal';
 
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -20,6 +21,8 @@ export default function Home() {
   const [deleteError, setDeleteError] = useState("");
   const [selectedPhotoForDelete, setSelectedPhotoForDelete] =
     useState<UploadedPhoto | null>(null);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [confirmAction, setConfirmAction] = useState<'upload' | 'delete' | null>(null);
 
   // Load photos from database on component mount
   useEffect(() => {
@@ -41,14 +44,23 @@ export default function Home() {
   };
 
   const handleUploadClick = () => {
-    setIsModalOpen(true);
-    setError("");
+    setConfirmAction('upload');
+    setIsConfirmModalOpen(true);
   };
 
   const handleDeleteClick = (photo: UploadedPhoto) => {
     setSelectedPhotoForDelete(photo);
-    setIsDeleteModalOpen(true);
-    setDeleteError("");
+    setConfirmAction('delete');
+    setIsConfirmModalOpen(true);
+  };
+
+  const handleConfirm = () => {
+    if (confirmAction === 'upload') {
+      setIsModalOpen(true);
+    } else if (confirmAction === 'delete') {
+      setIsDeleteModalOpen(true);
+    }
+    setConfirmAction(null);
   };
 
   const handleUploadSubmit = async (files: File[], phoneNumber: string) => {
@@ -162,6 +174,16 @@ export default function Home() {
 
       {/* Footer */}
       <Footer />
+
+      {/* Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={isConfirmModalOpen}
+        onClose={() => {
+          setIsConfirmModalOpen(false);
+          setConfirmAction(null);
+        }}
+        onConfirm={handleConfirm}
+      />
 
       {/* Upload Modal */}
       <UploadModal
