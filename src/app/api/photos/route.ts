@@ -46,16 +46,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Validate file size (10MB limit)
-    if (file.size > 10 * 1024 * 1024) {
+    // Validate file size (50MB limit)
+    if (file?.size > 50 * 1024 * 1024) {
       return NextResponse.json(
-        { error: 'File size too large. Please upload an image smaller than 10MB.' },
+        { error: 'File size too large. Please upload an image smaller than 50MB.' },
         { status: 400 }
       );
     }
-
-
-
     
     // Validate phone number (category)
     if (phoneNumber !== 'interior' && phoneNumber !== 'certificate') {
@@ -73,6 +70,7 @@ export async function POST(request: NextRequest) {
     // Upload to Vercel Blob
     const blob = await put(fileName, file, {
       access: 'public',
+      contentType: file.type
     });
 
     // Save to database with the Vercel Blob URL
