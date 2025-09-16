@@ -75,14 +75,14 @@ export default function UploadModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-      <div className="bg-white rounded-xl shadow-xl w-full max-w-xs sm:max-w-sm transition-all">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/40 backdrop-blur-xl">
+      <div className="w-full max-w-xs sm:max-w-sm rounded-2xl border border-white/50 bg-white/30 backdrop-blur-2xl shadow-[0_8px_30px_rgba(0,0,0,0.08)]">
         <div className="p-4 sm:p-6">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-lg font-bold text-gray-900">Upload Photos</h2>
             <button
               onClick={handleClose}
-              className="text-gray-400 hover:text-gray-600 p-1 rounded-full hover:bg-gray-100 transition-colors"
+              className="text-gray-600 hover:text-gray-800 p-1 rounded-full bg-white/40 backdrop-blur-md border border-white/50 hover:bg-white/60 transition-colors"
             >
               <svg
                 className="w-5 h-5"
@@ -106,7 +106,7 @@ export default function UploadModal({
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Select Photos
               </label>
-              <div className="border-2 border-dashed border-indigo-200 rounded-lg p-3 text-center bg-gradient-to-br from-indigo-50 to-purple-50">
+              <div className="border-2 border-dashed border-orange-200/70 rounded-lg p-3 text-center bg-gradient-to-br from-orange-50/80 to-white/70">
                 <input
                   type="file"
                   accept="image/*"
@@ -116,9 +116,9 @@ export default function UploadModal({
                   multiple
                 />
                 <label htmlFor="image-upload" className="cursor-pointer">
-                  <div className="w-12 h-12 bg-gradient-to-r from-indigo-100 to-purple-100 rounded-full flex items-center justify-center mx-auto mb-2">
+                  <div className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-2 bg-white/60 backdrop-blur-md border border-white/60">
                     <svg
-                      className="w-6 h-6 text-indigo-600"
+                      className="w-6 h-6 text-orange-500"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -156,14 +156,14 @@ export default function UploadModal({
                   onChange={(e) =>
                     setCategory(e.target.value as "interior" | "certificate")
                   }
-                  className="w-full px-3 py-2 border border-gray-200 rounded-md focus:ring-2 focus:ring-indigo-100 focus:border-indigo-400 text-sm bg-white cursor-pointer appearance-none"
+                  className="w-full px-3 py-2 rounded-md text-sm cursor-pointer appearance-none border border-white/60 bg-white/60 backdrop-blur-md focus:ring-2 focus:ring-orange-100 focus:border-orange-300"
                 >
                   <option value="interior">🏠 Interior Image</option>
                   <option value="certificate">🏆 Certificate</option>
                 </select>
                 <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                   <svg
-                    className="w-4 h-4 text-gray-400"
+                    className="w-4 h-4 text-gray-500"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -177,13 +177,11 @@ export default function UploadModal({
                   </svg>
                 </div>
               </div>
-              <div className="mt-1 p-2 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-md border border-indigo-100">
+              <div className="mt-1 p-2 rounded-md border border-white/60 bg-white/50 backdrop-blur-md">
                 <div className="flex items-center space-x-2">
                   <div
                     className={`w-2 h-2 rounded-full ${
-                      category === "interior"
-                        ? "bg-indigo-500"
-                        : "bg-purple-500"
+                      category === "interior" ? "bg-orange-500" : "bg-emerald-500"
                     }`}
                   ></div>
                   <span className="text-xs font-medium text-gray-700">
@@ -210,13 +208,13 @@ export default function UploadModal({
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter Password"
-                className="w-full px-3 py-2 border border-gray-200 rounded-md focus:ring-2 focus:ring-indigo-100 focus:border-indigo-400 text-sm"
+                className="w-full px-3 py-2 rounded-md text-sm border border-white/60 bg-white/60 backdrop-blur-md focus:ring-2 focus:ring-orange-100 focus:border-orange-300"
               />
             </div>
 
             {/* Error Message */}
             {error && (
-              <div className="bg-red-50 border border-red-200 rounded-md p-2">
+              <div className="rounded-md p-2 border border-red-200/60 bg-red-50/60 backdrop-blur-md">
                 <p className="text-xs text-red-600 font-medium">{error}</p>
               </div>
             )}
@@ -227,7 +225,7 @@ export default function UploadModal({
               disabled={
                 isLoading || selectedImages.length === 0 || !isPasswordValid()
               }
-              className="w-full bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white font-bold py-2 px-3 rounded-md hover:shadow-md hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+              className="relative w-full rounded-full text-sm font-semibold text-gray-900 bg-gradient-to-r from-orange-300/80 to-white/70 backdrop-blur-md border border-white/60 py-2 px-3 shadow-sm hover:shadow transition-transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isLoading ? (
                 <div className="flex items-center justify-center">
@@ -239,6 +237,7 @@ export default function UploadModal({
                   selectedImages.length !== 1 ? "s" : ""
                 }`
               )}
+              <span aria-hidden className="pointer-events-none absolute inset-0 rounded-full opacity-70 [mask-image:radial-gradient(60%_60%_at_20%_20%,white,transparent)]" />
             </button>
           </div>
         </div>
