@@ -4,10 +4,10 @@ import { NextRequest, NextResponse } from "next/server";
 // DELETE /api/photos/[id] - Delete photo by ID
 export async function DELETE(
   request: NextRequest,
-  context: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
   try {
-    const { id } = await context.params;
+    const { id } = params;
 
     const photo = await prisma.photo.findUnique({
       where: { id },
