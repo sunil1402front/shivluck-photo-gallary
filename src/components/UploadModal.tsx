@@ -75,14 +75,14 @@ export default function UploadModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/40 backdrop-blur-xl">
-      <div className="w-full max-w-xs sm:max-w-sm rounded-2xl border border-white/50 bg-white/30 backdrop-blur-2xl shadow-[0_8px_30px_rgba(0,0,0,0.08)]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/40 backdrop-blur-xl dark:bg-black/30">
+      <div className="w-full max-w-xs sm:max-w-sm rounded-2xl border border-white/50 bg-white/30 backdrop-blur-2xl shadow-[0_8px_30px_rgba(0,0,0,0.08)] dark:bg-white/10 dark:border-white/10">
         <div className="p-4 sm:p-6">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-lg font-bold text-gray-900">Upload Photos</h2>
+            <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">Upload Photos</h2>
             <button
               onClick={handleClose}
-              className="text-gray-600 hover:text-gray-800 p-1 rounded-full bg-white/40 backdrop-blur-md border border-white/50 hover:bg-white/60 transition-colors"
+              className="text-gray-600 hover:text-gray-800 p-1 rounded-full bg-white/40 backdrop-blur-md border border-white/50 hover:bg-white/60 transition-colors dark:text-gray-300 dark:hover:text-gray-100 dark:bg-white/10 dark:border-white/10 dark:hover:bg-white/20"
             >
               <svg
                 className="w-5 h-5"
@@ -103,10 +103,10 @@ export default function UploadModal({
           <div className="space-y-4">
             {/* Image Upload */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
                 Select Photos
               </label>
-              <div className="border-2 border-dashed border-orange-200/70 rounded-lg p-3 text-center bg-gradient-to-br from-orange-50/80 to-white/70">
+              <div className="border-2 border-dashed border-orange-200/70 rounded-lg p-3 text-center bg-gradient-to-br from-orange-50/80 to-white/70 dark:from-white/5 dark:to-white/10">
                 <input
                   type="file"
                   accept="image/*"
@@ -131,12 +131,12 @@ export default function UploadModal({
                       />
                     </svg>
                   </div>
-                  <p className="text-sm font-medium text-gray-700 mb-1">
+                  <p className="text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
                     {selectedImages.length > 0
                       ? selectedImages.map((img) => img.name).join(", ")
                       : "Click to select photo(s)"}
                   </p>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
                     {selectedImages.length > 0
                       ? `Total: ${selectedImages.length} image(s)`
                       : "All image formats supported"}
@@ -147,7 +147,7 @@ export default function UploadModal({
 
             {/* Category Selection */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
                 Category
               </label>
               <div className="relative">
@@ -156,14 +156,14 @@ export default function UploadModal({
                   onChange={(e) =>
                     setCategory(e.target.value as "interior" | "certificate")
                   }
-                  className="w-full px-3 py-2 rounded-md text-sm cursor-pointer appearance-none border border-white/60 bg-white/60 backdrop-blur-md focus:ring-2 focus:ring-orange-100 focus:border-orange-300"
+                  className="w-full px-3 py-2 rounded-md text-sm cursor-pointer appearance-none border border-white/60 bg-white/60 backdrop-blur-md focus:ring-2 focus:ring-orange-100 focus:border-orange-300 dark:bg-white/10 dark:border-white/10 dark:text-gray-100"
                 >
                   <option value="interior">🏠 Interior Image</option>
                   <option value="certificate">🏆 Certificate</option>
                 </select>
                 <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                   <svg
-                    className="w-4 h-4 text-gray-500"
+                    className="w-4 h-4 text-gray-500 dark:text-gray-300"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -177,20 +177,20 @@ export default function UploadModal({
                   </svg>
                 </div>
               </div>
-              <div className="mt-1 p-2 rounded-md border border-white/60 bg-white/50 backdrop-blur-md">
+              <div className="mt-1 p-2 rounded-md border border-white/60 bg-white/50 backdrop-blur-md dark:bg-white/10 dark:border-white/10">
                 <div className="flex items-center space-x-2">
                   <div
                     className={`w-2 h-2 rounded-full ${
                       category === "interior" ? "bg-orange-500" : "bg-emerald-500"
                     }`}
                   ></div>
-                  <span className="text-xs font-medium text-gray-700">
+                  <span className="text-xs font-medium text-gray-700 dark:text-gray-200">
                     {category === "interior"
                       ? "Interior Design Projects"
                       : "Professional Certificates"}
                   </span>
                 </div>
-                <p className="text-xs text-gray-500 mt-1 ml-4">
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 ml-4">
                   {category === "interior"
                     ? "Showcase your interior design work"
                     : "Display your professional certifications"}
@@ -200,7 +200,7 @@ export default function UploadModal({
 
             {/* Password */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
                 Password
               </label>
               <input
@@ -208,13 +208,13 @@ export default function UploadModal({
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter Password"
-                className="w-full px-3 py-2 rounded-md text-sm border border-white/60 bg-white/60 backdrop-blur-md focus:ring-2 focus:ring-orange-100 focus:border-orange-300"
+                className="w-full px-3 py-2 rounded-md text-sm border border-white/60 bg-white/60 backdrop-blur-md focus:ring-2 focus:ring-orange-100 focus:border-orange-300 dark:bg-white/10 dark:border-white/10 dark:text-gray-100"
               />
             </div>
 
             {/* Error Message */}
             {error && (
-              <div className="rounded-md p-2 border border-red-200/60 bg-red-50/60 backdrop-blur-md">
+              <div className="rounded-md p-2 border border-red-200/60 bg-red-50/60 backdrop-blur-md dark:bg-red-900/30">
                 <p className="text-xs text-red-600 font-medium">{error}</p>
               </div>
             )}
@@ -225,7 +225,7 @@ export default function UploadModal({
               disabled={
                 isLoading || selectedImages.length === 0 || !isPasswordValid()
               }
-              className="relative w-full rounded-full text-sm font-semibold text-gray-900 bg-gradient-to-r from-orange-300/80 to-white/70 backdrop-blur-md border border-white/60 py-2 px-3 shadow-sm hover:shadow transition-transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
+              className="relative w-full rounded-full text-sm font-semibold text-gray-900 bg-gradient-to-r from-orange-300/80 to-white/70 backdrop-blur-md border border-white/60 py-2 px-3 shadow-sm hover:shadow transition-transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed dark:text-gray-100 dark:from-orange-400/30 dark:to-white/10 dark:border-white/10"
             >
               {isLoading ? (
                 <div className="flex items-center justify-center">

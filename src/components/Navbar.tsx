@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface NavbarProps {
   onUploadClick: () => void;
@@ -8,14 +8,32 @@ interface NavbarProps {
 
 export default function Navbar({ onUploadClick }: NavbarProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isDark, setIsDark] = useState(false);
+
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const enableDark = stored ? stored === 'dark' : prefersDark;
+      document.documentElement.classList.toggle('dark', enableDark);
+      setIsDark(enableDark);
+    } catch {}
+  }, []);
 
   const handleUploadClick = () => {
     onUploadClick();
     setIsMobileMenuOpen(false);
   };
 
+  const toggleTheme = () => {
+    const next = !isDark;
+    setIsDark(next);
+    document.documentElement.classList.toggle('dark', next);
+    try { localStorage.setItem('theme', next ? 'dark' : 'light'); } catch {}
+  };
+
   return (
-    <nav className="sticky top-0 z-40 px-4 sm:px-8 py-4 backdrop-blur-md bg-white/60 border-b border-gray-200/70 shadow-sm overflow-hidden">
+    <nav className="sticky top-0 z-40 px-4 sm:px-8 py-4 backdrop-blur-md bg-white/60 border-b border-gray-200/70 shadow-sm overflow-hidden dark:bg-white/5 dark:border-white/10">
       {/* Floating bubbles */}
       <div aria-hidden className="pointer-events-none absolute -top-6 left-6 h-24 w-24 rounded-full bg-orange-200/50 blur-2xl bubble-anim-medium bubble-delay-1" />
       <div aria-hidden className="pointer-events-none absolute -top-10 right-10 h-20 w-20 rounded-full bg-amber-100/60 blur-2xl bubble-anim-slow bubble-delay-3" />
@@ -23,14 +41,26 @@ export default function Navbar({ onUploadClick }: NavbarProps) {
         <div className="flex items-center justify-between">
           {/* Logo - Left Side */}
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center shadow-sm ring-1 ring-gray-200/70 bg-white/70 backdrop-blur-md">
-              <span className="text-gray-900 font-extrabold text-lg sm:text-xl">S</span>
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center shadow-sm ring-1 ring-gray-200/70 bg-white/70 backdrop-blur-md dark:bg-white/10 dark:ring-white/10">
+              <span className="text-gray-900 dark:text-gray-100 font-extrabold text-lg sm:text-xl">S</span>
             </div>
-            <span className="text-lg sm:text-2xl font-extrabold text-gray-900"><span className="text-orange-500">SHIV</span> LUCK</span>
+            <span className="text-lg sm:text-2xl font-extrabold text-gray-900 dark:text-gray-100"><span className="text-orange-500">SHIV</span> LUCK</span>
           </div>
 
           {/* Desktop Menu Items - Right Side */}
           <div className="hidden md:flex items-center space-x-3">
+            {/* Theme toggle */}
+            <button
+              onClick={toggleTheme}
+              aria-label="Toggle theme"
+              className="inline-flex items-center justify-center h-9 w-9 rounded-full border border-gray-200/70 bg-white/60 backdrop-blur-md text-gray-900 hover:bg-white/80 transition-colors dark:border-white/10 dark:bg-white/10 dark:text-gray-100 dark:hover:bg-white/15"
+            >
+              {isDark ? (
+                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M21.64 13a9 9 0 1 1-10.63-10.6 1 1 0 0 1 1.11 1.48A7 7 0 1 0 20.16 12a1 1 0 0 1 1.48 1z"/></svg>
+              ) : (
+                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 18a6 6 0 1 0 0-12 6 6 0 0 0 0 12Zm0 4a1 1 0 0 1-1-1v-1a1 1 0 1 1 2 0v1a1 1 0 0 1-1 1Z"/></svg>
+              )}
+            </button>
             {/* Shivluck Site */}
             <a
               href="https://shiv-luck-interior.vercel.app/"
@@ -83,7 +113,7 @@ export default function Navbar({ onUploadClick }: NavbarProps) {
           <div className="md:hidden">
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="text-gray-900 hover:text-gray-700 transition-colors duration-300"
+              className="text-gray-900 hover:text-gray-700 transition-colors duration-300 dark:text-gray-100 dark:hover:text-gray-300"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 {isMobileMenuOpen ? (
@@ -103,7 +133,18 @@ export default function Navbar({ onUploadClick }: NavbarProps) {
           } transform`}
           style={{ pointerEvents: isMobileMenuOpen ? 'auto' : 'none' }}
         >
-          <div className="flex flex-col space-y-3 pt-4 pb-4 bg-white/60 backdrop-blur-md rounded-xl border border-gray-200/70 p-3">
+          <div className="flex flex-col space-y-3 pt-4 pb-4 bg-white/60 backdrop-blur-md rounded-xl border border-gray-200/70 p-3 dark:bg-white/10 dark:border-white/10">
+            <button
+              onClick={toggleTheme}
+              aria-label="Toggle theme"
+              className="self-end inline-flex items-center justify-center h-9 w-9 rounded-full border border-gray-200/70 bg-white/60 backdrop-blur-md text-gray-900 hover:bg-white/80 transition-colors dark:border-white/10 dark:bg-white/10 dark:text-gray-100 dark:hover:bg-white/15"
+            >
+              {isDark ? (
+                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M21.64 13a9 9 0 1 1-10.63-10.6 1 1 0 0 1 1.11 1.48A7 7 0 1 0 20.16 12a1 1 0 0 1 1.48 1z"/></svg>
+              ) : (
+                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 18a6 6 0 1 0 0-12 6 6 0 0 0 0 12Z"/></svg>
+              )}
+            </button>
             {/* Shivluck Site */}
             <a
               href="https://shiv-luck-interior.vercel.app/"

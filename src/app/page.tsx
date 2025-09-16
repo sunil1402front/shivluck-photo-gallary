@@ -151,7 +151,7 @@ export default function Home() {
   };
 
   return (
-    <div className="bg-transparent">
+    <div className="bg-transparent dark:bg-black">
       {/* Navbar */}
       <Navbar onUploadClick={handleUploadClick} />
 

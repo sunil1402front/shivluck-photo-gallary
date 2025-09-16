@@ -32,8 +32,8 @@ export default function ConfirmationModal({ isOpen, onClose, onConfirm }: Confir
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/40 backdrop-blur-xl">
-      <div className="w-full max-w-xs sm:max-w-sm rounded-2xl border border-white/50 bg-white/30 backdrop-blur-2xl shadow-[0_8px_30px_rgba(0,0,0,0.08)]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/40 backdrop-blur-xl dark:bg-black/30">
+      <div className="w-full max-w-xs sm:max-w-sm rounded-2xl border border-white/50 bg-white/30 backdrop-blur-2xl shadow-[0_8px_30px_rgba(0,0,0,0.08)] dark:bg-white/10 dark:border-white/10">
         {/* Header */}
         <div className="p-4 rounded-t-2xl text-center">
           <div className="w-12 h-12 bg-white/60 backdrop-blur-md border border-white/60 rounded-full flex items-center justify-center mx-auto mb-2">

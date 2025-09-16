@@ -31,11 +31,11 @@ export default function DeleteModal({
   if (!isOpen || !photo) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/40 backdrop-blur-xl">
-      <div className="w-full max-w-xs sm:max-w-sm rounded-2xl border border-white/50 bg-white/30 backdrop-blur-2xl shadow-[0_8px_30px_rgba(0,0,0,0.08)]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/40 backdrop-blur-xl dark:bg-black/30">
+      <div className="w-full max-w-xs sm:max-w-sm rounded-2xl border border-white/50 bg-white/30 backdrop-blur-2xl shadow-[0_8px_30px_rgba(0,0,0,0.08)] dark:bg-white/10 dark:border-white/10">
         {/* Header */}
-        <div className="p-4 sm:p-5 text-gray-900 text-center rounded-t-2xl">
-          <div className="w-12 h-12 bg-white/60 backdrop-blur-md border border-white/60 rounded-full flex items-center justify-center mx-auto mb-2">
+        <div className="p-4 sm:p-5 text-gray-900 text-center rounded-t-2xl dark:text-gray-100">
+          <div className="w-12 h-12 bg-white/60 backdrop-blur-md border border-white/60 rounded-full flex items-center justify-center mx-auto mb-2 dark:bg-white/10 dark:border-white/10">
             <svg
               className="w-6 h-6 text-red-500"
               fill="none"
@@ -51,7 +51,7 @@ export default function DeleteModal({
             </svg>
           </div>
           <h2 className="text-lg font-bold mb-1">Delete Photo</h2>
-          <p className="text-gray-600 text-xs">Confirm deletion to remove this photo.</p>
+          <p className="text-gray-600 text-xs dark:text-gray-400">Confirm deletion to remove this photo.</p>
         </div>
 
         <div className="p-4 sm:p-5">
@@ -60,14 +60,14 @@ export default function DeleteModal({
             <div className="flex space-x-2">
               <button
                 onClick={handleClose}
-                className="flex-1 rounded-full text-xs font-semibold text-gray-900 bg-white/60 backdrop-blur-md border border-white/60 py-2 px-2 hover:bg-white/80 transition-colors"
+                className="flex-1 rounded-full text-xs font-semibold text-gray-900 bg-white/60 backdrop-blur-md border border-white/60 py-2 px-2 hover:bg-white/80 transition-colors dark:text-gray-100 dark:bg-white/10 dark:border-white/10 dark:hover:bg-white/20"
               >
                 Cancel
               </button>
               <button
                 onClick={handleSubmit}
                 disabled={isLoading}
-                className="flex-1 rounded-full text-xs font-semibold text-white bg-gradient-to-r from-red-500/80 to-pink-500/80 backdrop-blur-md border border-white/40 py-2 px-2 hover:from-red-500 hover:to-pink-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 rounded-full text-xs font-semibold text-white bg-gradient-to-r from-red-500/80 to-pink-500/80 backdrop-blur-md border border-white/40 py-2 px-2 hover:from-red-500 hover:to-pink-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed dark:border-white/10"
               >
                 {isLoading ? (
                   <div className="flex items-center justify-center">

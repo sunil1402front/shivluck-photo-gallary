@@ -5,6 +5,9 @@
   --foreground: #171717;
 }
 
+/* Enable `dark:` classes using the `.dark` class on <html> (Tailwind v4 no-config) */
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

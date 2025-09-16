@@ -20,7 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} antialiased text-gray-900 bg-gradient-to-br from-orange-50 via-white to-orange-100`}>
+      <body className={`${inter.variable} antialiased text-gray-100 bg-gradient-to-br from-black via-zinc-900 to-orange-900`}>
         {children}
       </body>
     </html>
