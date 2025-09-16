@@ -26,7 +26,7 @@ export default function Navbar({ onUploadClick }: NavbarProps) {
             <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center shadow-sm ring-1 ring-gray-200/70 bg-white/70 backdrop-blur-md">
               <span className="text-gray-900 font-extrabold text-lg sm:text-xl">S</span>
             </div>
-            <span className="text-lg sm:text-2xl font-extrabold text-gray-900">SHIVLUCK</span>
+            <span className="text-lg sm:text-2xl font-extrabold text-gray-900"><span className="text-orange-500">SHIV</span> LUCK</span>
           </div>
 
           {/* Desktop Menu Items - Right Side */}
@@ -41,7 +41,7 @@ export default function Navbar({ onUploadClick }: NavbarProps) {
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9v-9m0-9v9" />
               </svg>
-              <span>Our ite</span>
+              <span>Our site</span>
             </a>
 
             {/* Instagram */}
@@ -114,7 +114,7 @@ export default function Navbar({ onUploadClick }: NavbarProps) {
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9v-9m0-9v9" />
               </svg>
-              <span>Our ite</span>
+              <span>Our site</span>
             </a>
 
             {/* Instagram */}
