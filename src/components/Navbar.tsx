@@ -60,7 +60,7 @@ export default function Navbar({ onUploadClick }: NavbarProps) {
   };
 
   return (
-    <nav className="sticky top-0 z-40 px-4 sm:px-8 py-4 backdrop-blur-md bg-white/60 border-b border-gray-200/70 shadow-sm overflow-hidden dark:bg-white/5 dark:border-white/10">
+    <nav className="sticky top-0 z-40 px-4 sm:px-8 py-3 backdrop-blur-md bg-white/60 border-b border-gray-200/70 shadow-sm overflow-hidden dark:bg-white/5 dark:border-white/10">
       {/* Floating bubbles */}
       <div
         aria-hidden

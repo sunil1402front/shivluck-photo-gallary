@@ -156,7 +156,7 @@ export default function Home() {
       <Navbar onUploadClick={handleUploadClick} />
 
       {/* Main Content */}
-      <main className="pt-8">
+      <main>
         {/* Gallery Section */}
         <PhotoGallery
           photos={uploadedPhotos}
