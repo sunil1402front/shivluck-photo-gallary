@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface NavbarProps {
   onUploadClick: () => void;
@@ -9,6 +9,8 @@ interface NavbarProps {
 export default function Navbar({ onUploadClick }: NavbarProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isDark, setIsDark] = useState(false);
+  const mobileMenuRef = useRef<HTMLDivElement | null>(null);
+  const mobileToggleRef = useRef<HTMLButtonElement | null>(null);
 
   useEffect(() => {
     try {
@@ -21,6 +23,27 @@ export default function Navbar({ onUploadClick }: NavbarProps) {
       setIsDark(enableDark);
     } catch {}
   }, []);
+
+  // Close mobile menu on outside click
+  useEffect(() => {
+    if (!isMobileMenuOpen) return;
+
+    const handlePointerDown = (event: MouseEvent | TouchEvent) => {
+      const target = event.target as Node;
+      const clickedInsideMenu = mobileMenuRef.current?.contains(target);
+      const clickedToggle = mobileToggleRef.current?.contains(target);
+      if (!clickedInsideMenu && !clickedToggle) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handlePointerDown, true);
+    document.addEventListener("touchstart", handlePointerDown, true);
+    return () => {
+      document.removeEventListener("mousedown", handlePointerDown, true);
+      document.removeEventListener("touchstart", handlePointerDown, true);
+    };
+  }, [isMobileMenuOpen]);
 
   const handleUploadClick = () => {
     onUploadClick();
@@ -173,6 +196,7 @@ export default function Navbar({ onUploadClick }: NavbarProps) {
           {/* Mobile Menu Button */}
           <div className="md:hidden flex items-center space-x-3">
             <button
+              ref={mobileToggleRef}
               onClick={toggleTheme}
               className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition"
               aria-label="Toggle theme border"
@@ -214,6 +238,7 @@ export default function Navbar({ onUploadClick }: NavbarProps) {
             </button>
 
             <button
+              ref={mobileToggleRef}
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="text-gray-900 hover:text-gray-700 transition-colors duration-300 dark:text-gray-100 dark:hover:text-gray-300"
             >
@@ -245,6 +270,7 @@ export default function Navbar({ onUploadClick }: NavbarProps) {
 
         {/* Mobile Menu with animation */}
         <div
+          ref={mobileMenuRef}
           className={`md:hidden overflow-hidden transition-all duration-500 ease-in-out ${
             isMobileMenuOpen
               ? "max-h-96 opacity-100 translate-y-0 mt-2 dark:bg-transparent"
