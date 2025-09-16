@@ -45,53 +45,57 @@ export default function PhotoGallery({
         </p>
       </div>
 
-      {/* Compact Tab Navigation */}
+      {/* Compact Tab Navigation - single line with animated pill */}
       <div className="flex justify-center mb-12">
-        <div className="inline-flex rounded-full p-1 bg-white/40 backdrop-blur-md shadow-sm border border-gray-200/70 dark:bg-white/10 dark:border-white/10">
-          <button
-            onClick={() => setActiveTab("interior")}
-            className={`relative overflow-hidden px-6 py-2 rounded-full font-semibold text-sm transition-all duration-300 flex items-center space-x-2 ${
-              activeTab === "interior"
-                ? "bg-gradient-to-br from-orange-200/60 to-white/60 text-gray-900 backdrop-blur-xl border border-white/60 shadow-sm ring-1 ring-white/40 dark:from-white/10 dark:to-white/5 dark:text-gray-100 dark:border-white/10 dark:ring-white/10"
-                : "text-gray-700 hover:text-gray-900 hover:bg-white/40 hover:backdrop-blur-md hover:border hover:border-white/40 dark:text-gray-300 dark:hover:text-gray-100 dark:hover:bg-white/10 dark:hover:border-white/10"
-            }`}
-          >
-            <span>Interior Images</span>
-            <span
-              className={`px-2 py-1 rounded-full text-xs font-bold ${
+        <div className="relative w-full max-w-[360px] sm:max-w-md rounded-full p-1 bg-white/40 backdrop-blur-md shadow-sm border border-gray-200/70 dark:bg-white/10 dark:border-white/10">
+          {/* Animated background */}
+          <motion.div
+            className="absolute top-1 bottom-1 left-1 w-[calc(50%-0.25rem)] rounded-full bg-gradient-to-br from-orange-200/60 to-white/60 shadow-sm ring-1 ring-white/40 border border-white/60 dark:from-white/10 dark:to-white/5 dark:ring-white/10 dark:border-white/10"
+            animate={{ x: activeTab === "interior" ? 0 : "100%" }}
+            transition={{ type: "spring", stiffness: 300, damping: 26 }}
+          />
+
+          <div className="relative grid grid-cols-2 gap-1">
+            <button
+              onClick={() => setActiveTab("interior")}
+              className={`relative z-10 flex items-center justify-center gap-2 px-4 py-2 rounded-full text-sm font-semibold transition-colors whitespace-nowrap ${
                 activeTab === "interior"
-                  ? "bg-white/60 text-gray-900 backdrop-blur-md border border-white/50 dark:bg-white/10 dark:text-gray-100 dark:border-white/10"
-                  : "bg-white/40 text-gray-700 dark:bg-white/10 dark:text-gray-300"
+                  ? "text-gray-900 dark:text-gray-100"
+                  : "text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100"
               }`}
             >
-              {interiorCount}
-            </span>
-            {activeTab === "interior" && (
-              <span aria-hidden className="pointer-events-none absolute inset-0 opacity-70 [mask-image:radial-gradient(60%_60%_at_20%_10%,white,transparent)]" />
-            )}
-          </button>
-          <button
-            onClick={() => setActiveTab("certificate")}
-            className={`relative overflow-hidden px-6 py-2 rounded-full font-semibold text-sm transition-all duration-300 flex items-center space-x-2 ${
-              activeTab === "certificate"
-                ? "bg-gradient-to-br from-orange-200/60 to-white/60 text-gray-900 backdrop-blur-xl border border-white/60 shadow-sm ring-1 ring-white/40 dark:from-white/10 dark:to-white/5 dark:text-gray-100 dark:border-white/10 dark:ring-white/10"
-                : "text-gray-700 hover:text-gray-900 hover:bg-white/40 hover:backdrop-blur-md hover:border hover:border-white/40 dark:text-gray-300 dark:hover:text-gray-100 dark:hover:bg-white/10 dark:hover:border-white/10"
-            }`}
-          >
-            <span>Certificates</span>
-            <span
-              className={`px-2 py-1 rounded-full text-xs font-bold ${
+              <span className="text-xs md:text-sm font-bold">Interior Images</span>
+              <span
+                className={`px-2 py-0.5 rounded-full text-xs font-bold ${
+                  activeTab === "interior"
+                    ? "bg-white/60 text-gray-900 backdrop-blur-md border border-white/50 dark:bg-white/10 dark:text-gray-100 dark:border-white/10"
+                    : "bg-white/40 text-gray-700 dark:bg-white/10 dark:text-gray-300"
+                }`}
+              >
+                {interiorCount}
+              </span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab("certificate")}
+              className={`relative z-10 flex items-center justify-center gap-2 px-4 py-2 rounded-full text-sm font-semibold transition-colors whitespace-nowrap ${
                 activeTab === "certificate"
-                  ? "bg-white/60 text-gray-900 backdrop-blur-md border border-white/50 dark:bg-white/10 dark:text-gray-100 dark:border-white/10"
-                  : "bg-white/40 text-gray-700 dark:bg-white/10 dark:text-gray-300"
+                  ? "text-gray-900 dark:text-gray-100"
+                  : "text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100"
               }`}
             >
-              {certificateCount}
-            </span>
-            {activeTab === "certificate" && (
-              <span aria-hidden className="pointer-events-none absolute inset-0 opacity-70 [mask-image:radial-gradient(60%_60%_at_20%_10%,white,transparent)]" />
-            )}
-          </button>
+              <span className="text-xs md:text-sm font-bold">Certificates</span>
+              <span
+                className={`px-2 py-0.5 rounded-full text-xs font-bold ${
+                  activeTab === "certificate"
+                    ? "bg-white/60 text-gray-900 backdrop-blur-md border border-white/50 dark:bg-white/10 dark:text-gray-100 dark:border-white/10"
+                    : "bg-white/40 text-gray-700 dark:bg-white/10 dark:text-gray-300"
+                }`}
+              >
+                {certificateCount}
+              </span>
+            </button>
+          </div>
         </div>
       </div>
 
