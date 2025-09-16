@@ -50,7 +50,7 @@ export default function PhotoGallery({
         <div className="relative w-full max-w-[360px] sm:max-w-md rounded-full p-1 bg-white/40 backdrop-blur-md shadow-sm border border-gray-200/70 dark:bg-white/10 dark:border-white/10">
           {/* Animated background */}
           <motion.div
-            className="absolute top-1 bottom-1 left-1 w-[calc(50%-0.25rem)] rounded-full bg-gradient-to-br from-orange-200/60 to-white/60 shadow-sm ring-1 ring-white/40 border border-white/60 dark:from-white/10 dark:to-white/5 dark:ring-white/10 dark:border-white/10"
+            className="absolute top-1 bottom-1 left-1 w-[calc(50%-0.25rem)] rounded-full bg-gradient-to-br from-orange-200/60 to-white/60 shadow-sm ring-1 ring-white/40 border border-white/60 dark:from-orange-400/30 dark:to-orange-300/20 dark:ring-orange-300/20 dark:border-orange-300/20"
             animate={{ x: activeTab === "interior" ? 0 : "100%" }}
             transition={{ type: "spring", stiffness: 300, damping: 26 }}
           />
