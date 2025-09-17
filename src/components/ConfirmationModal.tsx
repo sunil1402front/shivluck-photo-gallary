@@ -13,7 +13,7 @@ export default function ConfirmationModal({ isOpen, onClose, onConfirm }: Confir
   const [error, setError] = useState('');
 
   const handleConfirm = () => {
-    if (password === 'shivluck@1402') {
+    if (password === process.env.NEXT_PUBLIC_SHIVLUCK_PW) {
       setError('');
       setPassword('');
       onConfirm();

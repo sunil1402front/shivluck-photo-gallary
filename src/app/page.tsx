@@ -71,7 +71,7 @@ export default function Home() {
 
     if (phoneNumber !== "interior" && phoneNumber !== "certificate") {
       setError(
-        "Invalid password. Please enter 123 for Interior or 456 for Certificate"
+        "Invalid password."
       );
       return;
     }

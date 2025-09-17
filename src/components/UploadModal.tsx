@@ -36,10 +36,10 @@ export default function UploadModal({
     if (selectedImages.length === 0) return;
 
     // Validate password based on selected category
-    if (category === "interior" && password !== "123") {
+    if (category === "interior" && password !== process.env.NEXT_PUBLIC_INTERIOR_PW) {
       return;
     }
-    if (category === "certificate" && password !== "456") {
+    if (category === "certificate" && password !== process.env.NEXT_PUBLIC_CERTIFICATE_PW) {
       return;
     }
 
@@ -64,10 +64,10 @@ export default function UploadModal({
   // Check if password is valid for selected category
   const isPasswordValid = () => {
     if (category === "interior") {
-      return password === "123";
+      return password === process.env.NEXT_PUBLIC_INTERIOR_PW;
     }
     if (category === "certificate") {
-      return password === "456";
+      return password === process.env.NEXT_PUBLIC_CERTIFICATE_PW;
     }
     return false;
   };
